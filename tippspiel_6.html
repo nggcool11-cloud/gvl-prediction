@@ -1,0 +1,1194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WC 2026 — Predictions</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#f4f4f0;--surface:#fff;--card:#fff;--card2:#f7f7f3;--border:rgba(0,0,0,0.1);--border2:rgba(0,0,0,0.06);
+  --text:#111;--text2:#555;--text3:#999;--accent:#e8a000;--accent-t:#fff;
+  --win:#1a9e4a;--win-bg:#e8f7ed;--win-b:#a3d9b5;
+  --draw:#c47d00;--draw-bg:#fdf3dc;--draw-b:#f0c96a;
+  --lose:#c93030;--lose-bg:#fce8e8;--lose-b:#f0a3a3;
+  --sh:0 1px 3px rgba(0,0,0,0.08);--sh-lg:0 4px 20px rgba(0,0,0,0.12);
+  --r:12px;--rs:8px;
+}
+[data-theme="dark"]{
+  --bg:#0d0d0d;--surface:#181818;--card:#1e1e1e;--card2:#252525;--border:rgba(255,255,255,0.1);--border2:rgba(255,255,255,0.05);
+  --text:#f0f0ec;--text2:#aaa;--text3:#555;
+  --win:#22c55e;--win-bg:rgba(34,197,94,0.12);--win-b:rgba(34,197,94,0.3);
+  --draw:#f59e0b;--draw-bg:rgba(245,158,11,0.12);--draw-b:rgba(245,158,11,0.3);
+  --lose:#ef4444;--lose-bg:rgba(239,68,68,0.12);--lose-b:rgba(239,68,68,0.3);
+  --sh:0 1px 4px rgba(0,0,0,0.5);--sh-lg:0 4px 20px rgba(0,0,0,0.6);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;transition:background .2s,color .2s;}
+button,input{font-family:'Inter',sans-serif;}
+header{background:var(--surface);border-bottom:1px solid var(--border);padding:0 16px;display:flex;align-items:center;justify-content:space-between;height:58px;position:sticky;top:0;z-index:100;box-shadow:var(--sh);}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:3px;color:var(--text);display:flex;align-items:center;gap:6px;cursor:pointer;}
+.logo span{color:var(--accent);}
+.hright{display:flex;align-items:center;gap:8px;}
+.icon-btn{width:34px;height:34px;border-radius:50%;background:var(--card2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px;transition:border-color .15s;flex-shrink:0;}
+.icon-btn:hover{border-color:var(--accent);}
+.profile-btn{display:flex;align-items:center;gap:8px;background:var(--card2);border:1px solid var(--border);border-radius:99px;padding:4px 12px 4px 4px;cursor:pointer;transition:border-color .15s;max-width:150px;}
+.profile-btn:hover{border-color:var(--accent);}
+.av{width:26px;height:26px;border-radius:50%;background:var(--accent);color:var(--accent-t);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px;flex-shrink:0;}
+.pname{font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.screen{display:none;}
+.screen.active{display:flex;}
+#login-screen{min-height:100vh;align-items:center;justify-content:center;padding:20px;}
+#app{display:none;flex-direction:column;}
+#app.active{display:flex;}
+.login-wrap{width:400px;max-width:100%;}
+.login-hdr{text-align:center;margin-bottom:24px;}
+.login-hdr .big{font-family:'Bebas Neue',sans-serif;font-size:50px;letter-spacing:5px;color:var(--text);line-height:1;}
+.login-hdr .big span{color:var(--accent);}
+.login-hdr .sub{font-size:13px;color:var(--text2);margin-top:5px;}
+.atabs{display:flex;background:var(--card2);border-radius:var(--r);padding:4px;margin-bottom:16px;border:1px solid var(--border);}
+.atab{flex:1;padding:8px;text-align:center;font-size:13px;font-weight:600;border-radius:calc(var(--r) - 3px);cursor:pointer;transition:all .15s;color:var(--text2);}
+.atab.active{background:var(--surface);color:var(--text);box-shadow:var(--sh);}
+.fcard{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:22px;box-shadow:var(--sh);}
+.igrp{margin-bottom:12px;}
+.igrp label{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:5px;}
+.igrp input{width:100%;padding:9px 12px;background:var(--card2);border:1px solid var(--border);border-radius:var(--rs);color:var(--text);font-size:13px;outline:none;transition:border-color .15s;}
+.igrp input:focus{border-color:var(--accent);}
+.igrp input::placeholder{color:var(--text3);}
+.sbtn{width:100%;padding:11px;background:var(--accent);color:var(--accent-t);border:none;border-radius:var(--rs);font-size:13px;font-weight:700;cursor:pointer;margin-top:4px;transition:opacity .15s;letter-spacing:.5px;}
+.sbtn:hover{opacity:.88;}
+.sbtn:disabled{opacity:.45;cursor:not-allowed;}
+.fp-box{background:var(--lose-bg);border:1px solid var(--lose-b);border-radius:var(--rs);padding:10px 12px;margin-top:14px;}
+.fp-box .fpt{font-size:11px;font-weight:700;color:var(--lose);margin-bottom:3px;}
+.fp-box p{font-size:11px;color:var(--text2);line-height:1.6;}
+.nav-tabs{display:flex;border-bottom:1px solid var(--border);background:var(--surface);}
+.ntab{padding:12px 20px;font-size:13px;font-weight:600;color:var(--text2);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap;}
+.ntab:hover{color:var(--text);}
+.ntab.active{color:var(--accent);border-bottom-color:var(--accent);}
+.container{max-width:820px;margin:0 auto;padding:20px 16px;width:100%;}
+.date-nav{display:flex;align-items:center;gap:8px;margin-bottom:18px;}
+.date-nav-scroll{display:flex;gap:6px;overflow-x:auto;flex:1;padding-bottom:2px;-webkit-overflow-scrolling:touch;}
+.date-nav-scroll::-webkit-scrollbar{height:3px;}
+.date-nav-scroll::-webkit-scrollbar-track{background:transparent;}
+.date-nav-scroll::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px;}
+.dtab{flex-shrink:0;padding:6px 13px;background:var(--card);border:1px solid var(--border);border-radius:99px;font-size:12px;font-weight:600;color:var(--text2);cursor:pointer;transition:all .15s;white-space:nowrap;}
+.dtab:hover:not(.active){border-color:var(--accent);color:var(--text);}
+.dtab.active{background:var(--accent);color:var(--accent-t);border-color:var(--accent);}
+.nav-arrow{width:30px;height:30px;border-radius:50%;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;flex-shrink:0;transition:border-color .15s;}
+.nav-arrow:hover{border-color:var(--accent);}
+.games-section{display:flex;flex-direction:column;gap:10px;}
+.game-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;transition:box-shadow .2s;}
+.game-card:hover{box-shadow:var(--sh-lg);}
+.game-inner{padding:14px 16px 12px;}
+.locked-pill{display:inline-flex;align-items:center;gap:5px;background:var(--card2);border:1px solid var(--border2);border-radius:99px;padding:3px 9px;font-size:10px;font-weight:600;color:var(--text3);margin-bottom:8px;}
+.result-pill{display:inline-flex;align-items:center;gap:5px;border-radius:99px;padding:3px 9px;font-size:10px;font-weight:700;margin-bottom:8px;}
+.result-pill.home{background:var(--win-bg);border:1px solid var(--win-b);color:var(--win);}
+.result-pill.draw{background:var(--draw-bg);border:1px solid var(--draw-b);color:var(--draw);}
+.result-pill.away{background:var(--lose-bg);border:1px solid var(--lose-b);color:var(--lose);}
+.teams-row{display:flex;align-items:center;gap:6px;margin-bottom:10px;}
+.team-side{flex:1;display:flex;align-items:center;gap:7px;min-width:0;}
+.team-side.right{flex-direction:row-reverse;}
+.tflag{font-size:18px;flex-shrink:0;}
+.tname{font-size:13px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.vs-b{font-size:10px;font-weight:800;color:var(--text3);background:var(--card2);border:1px solid var(--border2);border-radius:4px;padding:2px 6px;flex-shrink:0;}
+.score-display{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--text);letter-spacing:2px;flex-shrink:0;}
+.tip-row{display:flex;gap:6px;margin-bottom:8px;}
+.tip-btn{flex:1;padding:8px 3px;border-radius:var(--rs);border:1px solid var(--border);background:var(--card2);color:var(--text);font-size:10px;font-weight:600;cursor:pointer;transition:all .15s;line-height:1.3;text-align:center;}
+.tip-btn .tn{display:block;font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.tip-btn .tl{display:block;font-size:9px;font-weight:500;margin-top:1px;opacity:.7;}
+.tip-btn.win:not(:disabled):hover,.tip-btn.win.selected{background:var(--win-bg);border-color:var(--win-b);color:var(--win);}
+.tip-btn.draw:not(:disabled):hover,.tip-btn.draw.selected{background:var(--draw-bg);border-color:var(--draw-b);color:var(--draw);}
+.tip-btn.lose:not(:disabled):hover,.tip-btn.lose.selected{background:var(--lose-bg);border-color:var(--lose-b);color:var(--lose);}
+.tip-btn:disabled{opacity:.4;cursor:not-allowed;}
+.submit-row{display:flex;align-items:center;gap:8px;margin-top:4px;}
+.submit-tip-btn{flex:1;padding:9px;background:var(--accent);color:var(--accent-t);border:none;border-radius:var(--rs);font-size:12px;font-weight:700;cursor:pointer;transition:opacity .15s;letter-spacing:.3px;}
+.submit-tip-btn:hover{opacity:.88;}
+.submit-tip-btn:disabled{opacity:.35;cursor:not-allowed;}
+.pending-badge{font-size:10px;color:var(--text3);font-weight:500;white-space:nowrap;}
+.dist-bar{margin-top:10px;padding-top:10px;border-top:1px solid var(--border2);}
+.dist-track{display:flex;height:4px;border-radius:99px;overflow:hidden;gap:2px;margin-bottom:6px;}
+.ds{transition:width .5s ease;}
+.ds.win{background:var(--win);}
+.ds.draw{background:var(--draw);}
+.ds.lose{background:var(--lose);}
+.dist-labels{display:flex;justify-content:space-between;}
+.di{display:flex;align-items:center;gap:3px;font-size:10px;font-weight:600;}
+.di.wc{color:var(--win);}
+.di.dc{color:var(--draw);}
+.di.lc{color:var(--lose);}
+.dd{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.dd.win{background:var(--win);}
+.dd.draw{background:var(--draw);}
+.dd.lose{background:var(--lose);}
+.tip-count{text-align:center;font-size:10px;color:var(--text3);margin-top:5px;font-weight:500;}
+.my-tip-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;padding:3px 8px;border-radius:99px;margin-left:6px;}
+.my-tip-badge.win{background:var(--win-bg);color:var(--win);border:1px solid var(--win-b);}
+.my-tip-badge.draw{background:var(--draw-bg);color:var(--draw);border:1px solid var(--draw-b);}
+.my-tip-badge.lose{background:var(--lose-bg);color:var(--lose);border:1px solid var(--lose-b);}
+.ko-placeholder{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:48px 24px;text-align:center;}
+.ko-placeholder .ko-icon{font-size:36px;margin-bottom:12px;}
+.ko-placeholder h3{font-size:18px;font-weight:700;margin-bottom:6px;}
+.ko-placeholder p{font-size:13px;color:var(--text2);}
+.coming-soon-badge{display:inline-block;background:var(--draw-bg);border:1px solid var(--draw-b);color:var(--draw);font-size:11px;font-weight:700;padding:4px 12px;border-radius:99px;margin-bottom:14px;letter-spacing:1px;}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(3px);z-index:200;align-items:center;justify-content:center;padding:16px;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;width:360px;max-width:100%;position:relative;box-shadow:var(--sh-lg);max-height:90vh;overflow-y:auto;}
+.modal h2{font-size:17px;font-weight:700;margin-bottom:18px;}
+.mclose{position:absolute;top:12px;right:12px;background:var(--card2);border:1px solid var(--border);border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;color:var(--text2);}
+.mclose:hover{color:var(--text);}
+.prows{margin-bottom:16px;}
+.prow{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border2);}
+.prow:last-child{border-bottom:none;}
+.pl{font-size:11px;color:var(--text3);font-weight:500;}
+.pv{font-size:13px;font-weight:600;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.sgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;}
+.sbox{background:var(--card2);border-radius:var(--rs);padding:12px;text-align:center;border:1px solid var(--border2);}
+.sbox .sv{font-size:26px;font-weight:700;font-family:'Bebas Neue',sans-serif;color:var(--accent);}
+.sbox .sl{font-size:10px;color:var(--text3);margin-top:2px;font-weight:500;}
+.lbtn{width:100%;padding:10px;background:none;border:1px solid var(--lose-b);color:var(--lose);border-radius:var(--rs);font-size:13px;font-weight:600;cursor:pointer;transition:background .15s;}
+.lbtn:hover{background:var(--lose-bg);}
+.info-section{background:var(--card2);border:1px solid var(--border2);border-radius:var(--rs);padding:12px;margin-bottom:16px;}
+.info-section h4{font-size:12px;font-weight:700;margin-bottom:8px;color:var(--text2);}
+.info-row{display:flex;justify-content:space-between;font-size:11px;padding:3px 0;border-bottom:1px solid var(--border2);}
+.info-row:last-child{border-bottom:none;}
+.info-row .ik{color:var(--text3);}
+.info-row .iv{font-weight:600;color:var(--accent);}
+.admin-section{margin-bottom:20px;}
+.admin-section h3{font-size:14px;font-weight:700;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border2);}
+.game-result-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border2);flex-wrap:wrap;}
+.game-result-row:last-child{border-bottom:none;}
+.gr-teams{font-size:12px;font-weight:600;flex:1;min-width:0;}
+.gr-date{font-size:10px;color:var(--text3);margin-top:1px;}
+.res-btns{display:flex;gap:5px;}
+.res-btn{padding:5px 10px;font-size:11px;font-weight:600;border-radius:6px;border:1px solid var(--border);background:var(--card2);color:var(--text2);cursor:pointer;transition:all .15s;}
+.res-btn:hover,.res-btn.active{border-color:transparent;}
+.res-btn.home.active{background:var(--win-bg);border-color:var(--win-b);color:var(--win);}
+.res-btn.draw.active{background:var(--draw-bg);border-color:var(--draw-b);color:var(--draw);}
+.res-btn.away.active{background:var(--lose-bg);border-color:var(--lose-b);color:var(--lose);}
+.res-btn.home:hover{background:var(--win-bg);color:var(--win);}
+.res-btn.draw:hover{background:var(--draw-bg);color:var(--draw);}
+.res-btn.away:hover{background:var(--lose-bg);color:var(--lose);}
+.score-inputs{display:flex;align-items:center;gap:4px;}
+.score-inputs input{width:36px;padding:4px;text-align:center;background:var(--card2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:13px;font-weight:700;outline:none;}
+.score-inputs input:focus{border-color:var(--accent);}
+.score-sep{font-weight:700;color:var(--text3);}
+.save-res-btn{padding:5px 10px;font-size:11px;font-weight:700;background:var(--accent);color:var(--accent-t);border:none;border-radius:6px;cursor:pointer;transition:opacity .15s;}
+.save-res-btn:hover{opacity:.85;}
+.admin-badge{background:var(--lose-bg);border:1px solid var(--lose-b);color:var(--lose);font-size:10px;font-weight:700;padding:2px 7px;border-radius:99px;margin-left:6px;}
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--text);color:var(--bg);padding:10px 20px;border-radius:99px;font-weight:600;font-size:12px;z-index:300;transition:transform .25s ease;pointer-events:none;white-space:nowrap;}
+#toast.success{background:var(--win);color:#fff;}
+#toast.error{background:var(--lose);color:#fff;}
+#toast.show{transform:translateX(-50%) translateY(0);}
+.notice{background:var(--draw-bg);border:1px solid var(--draw-b);border-radius:var(--rs);padding:10px 14px;font-size:12px;color:var(--draw);margin-bottom:14px;text-align:center;cursor:pointer;font-weight:500;}
+.notice:hover{opacity:.85;}
+.mytips-list{display:flex;flex-direction:column;gap:8px;}
+.mt-card{background:var(--card);border:1px solid var(--border);border-radius:var(--rs);padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.mt-match{font-size:12px;font-weight:600;}
+.mt-date{font-size:10px;color:var(--text3);margin-top:1px;}
+.mt-right{display:flex;align-items:center;gap:6px;}
+.correct-badge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:99px;}
+.correct-badge.yes{background:var(--win-bg);color:var(--win);border:1px solid var(--win-b);}
+.correct-badge.no{background:var(--lose-bg);color:var(--lose);border:1px solid var(--lose-b);}
+.correct-badge.pending{background:var(--card2);color:var(--text3);border:1px solid var(--border2);}
+/* Loading overlay */
+.db-loading{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;gap:12px;}
+.db-loading .spin{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;}
+.db-loading p{font-size:13px;color:var(--text2);font-weight:500;}
+@keyframes spin{to{transform:rotate(360deg);}}
+/* Supabase status badge */
+.db-badge{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:600;padding:3px 9px;border-radius:99px;border:1px solid var(--win-b);background:var(--win-bg);color:var(--win);}
+.db-badge.err{border-color:var(--lose-b);background:var(--lose-bg);color:var(--lose);}
+</style>
+</head>
+<body>
+
+<!-- DB Loading overlay -->
+<div class="db-loading" id="db-loading">
+  <div class="spin"></div>
+  <p>Connecting to database…</p>
+</div>
+
+<!-- LOGIN SCREEN -->
+<div id="login-screen" class="screen" style="align-items:center;justify-content:center;min-height:100vh;padding:20px;">
+  <div class="login-wrap">
+    <div class="login-hdr">
+      <div class="big">WC <span>2026</span></div>
+      <div class="sub">Prediction Game — Join the competition</div>
+    </div>
+    <div class="atabs">
+      <div class="atab active" id="tab-li" onclick="swTab('li')">Log In</div>
+      <div class="atab" id="tab-re" onclick="swTab('re')">Register</div>
+    </div>
+    <div id="form-li" class="fcard">
+      <div class="igrp"><label>Roblox Username</label><input type="text" id="li-roblox" placeholder="YourRobloxName" autocomplete="off"></div>
+      <div class="igrp"><label>Password</label><input type="password" id="li-pass" placeholder="Your password"><div style="font-size:10px;color:var(--lose);margin-top:5px;font-weight:600;">⚠️ Never use your real Roblox password!</div></div>
+      <button class="sbtn" id="login-btn" onclick="doLogin()">LOG IN</button>
+    </div>
+    <div id="form-re" class="fcard" style="display:none">
+      <div class="igrp"><label>Roblox Username</label><input type="text" id="re-roblox" placeholder="YourRobloxName" autocomplete="off"></div>
+      <div class="igrp"><label>Discord Username</label><input type="text" id="re-discord" placeholder="name or name#0000"></div>
+      <div class="igrp"><label>Create Password</label><input type="password" id="re-pass" placeholder="Choose a password"><div style="font-size:10px;color:var(--lose);margin-top:5px;font-weight:600;">⚠️ Never use your real Roblox password!</div></div>
+      <div class="igrp"><label>Confirm Password</label><input type="password" id="re-pass2" placeholder="Repeat password"></div>
+      <button class="sbtn" id="reg-btn" onclick="doRegister()">CREATE ACCOUNT</button>
+      <div class="fp-box">
+        <div class="fpt">⚠️ Fair Play Notice</div>
+        <p>One prediction per game. Multi-accounting is pointless — all picks are linked to your Roblox & Discord names and visible to admins. Play fair! 🤝</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app" class="screen" style="flex-direction:column;">
+  <header>
+    <div class="logo" onclick="openProfile()">⚽ <span>WC</span> 2026</div>
+    <div class="hright">
+      <div class="icon-btn" onclick="toggleTheme()" id="theme-btn" title="Toggle theme">🌙</div>
+      <div class="profile-btn" onclick="openProfile()">
+        <div class="av" id="hav">?</div>
+        <span class="pname" id="hname">Guest</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="nav-tabs">
+    <div class="ntab active" id="ntab-group" onclick="switchNav('group')">Group Stage</div>
+    <div class="ntab" id="ntab-ko" onclick="switchNav('ko')">Knockout</div>
+    <div class="ntab" id="ntab-mytips" onclick="switchNav('mytips')">My Predictions</div>
+  </div>
+
+  <div class="container">
+    <div id="notice-bar" class="notice" style="display:none" onclick="showLogin()">
+      ⚠️ Not logged in — click here to log in and place predictions!
+    </div>
+
+    <div id="view-group">
+      <div class="date-nav">
+        <div class="nav-arrow" onclick="shiftDate(-1)">‹</div>
+        <div class="date-nav-scroll" id="date-tabs"></div>
+        <div class="nav-arrow" onclick="shiftDate(1)">›</div>
+      </div>
+      <div class="games-section" id="games-list"></div>
+    </div>
+
+    <div id="view-ko" style="display:none">
+      <div id="ko-games-list"></div>
+    </div>
+
+    <div id="view-mytips" style="display:none">
+      <div id="mytips-content"></div>
+    </div>
+  </div>
+</div>
+
+<!-- PROFILE MODAL -->
+<div class="modal-overlay" id="modal-profile">
+  <div class="modal">
+    <button class="mclose" onclick="closeModal('profile')">✕</button>
+    <h2>My Profile <span id="admin-badge-hdr"></span></h2>
+    <div class="prows">
+      <div class="prow"><span class="pl">Roblox</span><span class="pv" id="p-roblox">–</span></div>
+      <div class="prow"><span class="pl">Discord</span><span class="pv" id="p-discord">–</span></div>
+    </div>
+    <div class="info-section">
+      <h4>ℹ️ How it works</h4>
+      <div class="info-row"><span class="ik">Correct prediction</span><span class="iv">+1 point</span></div>
+      <div class="info-row"><span class="ik">Predictions lock</span><span class="iv">10 min before kickoff</span></div>
+      <div class="info-row"><span class="ik">Submit button</span><span class="iv">Required to save</span></div>
+      <div class="info-row"><span class="ik">Multi-accounting</span><span class="iv">Not allowed</span></div>
+    </div>
+    <div class="info-section" style="margin-bottom:12px;">
+      <h4>🗄️ Database</h4>
+      <div class="info-row"><span class="ik">Status</span><span class="iv"><span id="db-status-badge" class="db-badge">● Connected</span></span></div>
+      <div class="info-row"><span class="ik">Storage</span><span class="iv">Supabase (shared)</span></div>
+    </div>
+    <div class="sgrid">
+      <div class="sbox"><div class="sv" id="p-tips">0</div><div class="sl">Predictions</div></div>
+      <div class="sbox"><div class="sv" id="p-correct">0</div><div class="sl">Correct</div></div>
+      <div class="sbox"><div class="sv" id="p-points" style="color:#3b82f6">0</div><div class="sl">Points</div></div>
+      <div class="sbox"><div class="sv" id="p-rank" style="color:var(--win)">–</div><div class="sl">Rank</div></div>
+    </div>
+    <button id="admin-panel-btn" onclick="openAdmin()" style="width:100%;padding:10px;background:var(--lose-bg);border:1px solid var(--lose-b);color:var(--lose);border-radius:var(--rs);font-size:13px;font-weight:700;cursor:pointer;margin-bottom:10px;display:none;">🛡️ Admin Panel</button>
+    <button class="lbtn" onclick="doLogout()">Log Out</button>
+  </div>
+</div>
+
+<!-- ADMIN PANEL MODAL -->
+<div class="modal-overlay" id="modal-admin">
+  <div class="modal" style="width:600px;max-width:100%;">
+    <button class="mclose" onclick="closeModal('admin')">✕</button>
+    <h2>🛡️ Admin Panel</h2>
+
+    <div class="admin-section">
+      <h3>📋 Enter Results — Group Stage</h3>
+      <div id="admin-games-list"></div>
+    </div>
+
+    <div class="admin-section">
+      <h3>➕ Add Knockout Match</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+        <div class="igrp" style="margin:0"><label>Home Team + Flag</label><input type="text" id="ko-home" placeholder="Germany 🇩🇪"></div>
+        <div class="igrp" style="margin:0"><label>Away Team + Flag</label><input type="text" id="ko-away" placeholder="France 🇫🇷"></div>
+        <div class="igrp" style="margin:0"><label>Date (YYYY-MM-DD)</label><input type="text" id="ko-date" placeholder="2026-07-01"></div>
+        <div class="igrp" style="margin:0"><label>Time (HH:MM, MESZ)</label><input type="text" id="ko-time" placeholder="21:00"></div>
+        <div class="igrp" style="margin:0;grid-column:1/-1"><label>Round</label><input type="text" id="ko-round" placeholder="Round of 16 / Quarter-final / Semi-final / Final"></div>
+      </div>
+      <button class="sbtn" style="margin-top:0" onclick="addKOMatch()">ADD MATCH</button>
+    </div>
+
+    <div class="admin-section">
+      <h3>🏆 KO Matches</h3>
+      <div id="ko-matches-list"></div>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ─────────────────────────────────────────────
+//  SUPABASE CONFIG
+// ─────────────────────────────────────────────
+const SB_URL = 'https://zjaluyvjrmvijjxnaamq.supabase.co';
+const SB_KEY = 'sb_publishable_SxOxCSDuVO_wotk1b2PmgA_ltOlDhOM';
+
+const sbHeaders = {
+  'apikey': SB_KEY,
+  'Authorization': 'Bearer ' + SB_KEY,
+  'Content-Type': 'application/json',
+  'Prefer': 'return=representation'
+};
+
+// Generic Supabase REST helpers
+async function sbSelect(table, params='') {
+  const r = await fetch(`${SB_URL}/rest/v1/${table}?${params}`, {
+    headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY }
+  });
+  if (!r.ok) throw new Error(await r.text());
+  return r.json();
+}
+
+async function sbInsert(table, data) {
+  const r = await fetch(`${SB_URL}/rest/v1/${table}`, {
+    method: 'POST', headers: sbHeaders,
+    body: JSON.stringify(data)
+  });
+  if (!r.ok) throw new Error(await r.text());
+  return r.json();
+}
+
+async function sbUpsert(table, data, onConflict) {
+  const url = onConflict
+    ? `${SB_URL}/rest/v1/${table}?on_conflict=${onConflict}`
+    : `${SB_URL}/rest/v1/${table}`;
+  const r = await fetch(url, {
+    method: 'POST',
+    headers: { ...sbHeaders, 'Prefer': 'return=representation,resolution=merge-duplicates' },
+    body: JSON.stringify(data)
+  });
+  if (!r.ok) throw new Error(await r.text());
+  return r.json();
+}
+
+async function sbUpdate(table, match, data) {
+  const params = Object.entries(match).map(([k,v])=>`${k}=eq.${encodeURIComponent(v)}`).join('&');
+  const r = await fetch(`${SB_URL}/rest/v1/${table}?${params}`, {
+    method: 'PATCH', headers: sbHeaders,
+    body: JSON.stringify(data)
+  });
+  if (!r.ok) throw new Error(await r.text());
+  return r.json();
+}
+
+async function sbDelete(table, match) {
+  const params = Object.entries(match).map(([k,v])=>`${k}=eq.${encodeURIComponent(v)}`).join('&');
+  const r = await fetch(`${SB_URL}/rest/v1/${table}?${params}`, {
+    method: 'DELETE',
+    headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY }
+  });
+  if (!r.ok) throw new Error(await r.text());
+}
+
+// ─────────────────────────────────────────────
+//  CONSTANTS
+// ─────────────────────────────────────────────
+const WEBHOOK = 'https://discord.com/api/webhooks/1511437769422012560/bCv5VvijS_418nqbNza4t4y2NIyshJdJ6mxQ0e_yY23ZPAOhx75-YnWeV8oNoxytHPki';
+const ADMIN_USER = 'lucas';
+const ADMIN_PASS = 'Lucas2010!!!';
+
+const GROUP_GAMES = [
+  {id:1,  date:"2026-06-12",time:"04:00",home:"South Korea",   away:"Czech Republic",      hf:"🇰🇷",af:"🇨🇿"},
+  {id:2,  date:"2026-06-12",time:"21:00",home:"Canada",        away:"Bosnia & Herz.",      hf:"🇨🇦",af:"🇧🇦"},
+  {id:3,  date:"2026-06-12",time:"21:00",home:"Mexico",        away:"South Africa",        hf:"🇲🇽",af:"🇿🇦"},
+  {id:4,  date:"2026-06-13",time:"03:00",home:"USA",           away:"Paraguay",            hf:"🇺🇸",af:"🇵🇾"},
+  {id:5,  date:"2026-06-13",time:"21:00",home:"Qatar",         away:"Switzerland",         hf:"🇶🇦",af:"🇨🇭"},
+  {id:6,  date:"2026-06-14",time:"00:00",home:"Brazil",        away:"Morocco",             hf:"🇧🇷",af:"🇲🇦"},
+  {id:7,  date:"2026-06-14",time:"03:00",home:"Haiti",         away:"Scotland",            hf:"🇭🇹",af:"🏴󠁧󠁢󠁳󠁣󠁴󠁿"},
+  {id:8,  date:"2026-06-14",time:"06:00",home:"Australia",     away:"Turkey",              hf:"🇦🇺",af:"🇹🇷"},
+  {id:9,  date:"2026-06-14",time:"19:00",home:"Germany",       away:"Curaçao",             hf:"🇩🇪",af:"🇨🇼"},
+  {id:10, date:"2026-06-14",time:"22:00",home:"Netherlands",   away:"Japan",               hf:"🇳🇱",af:"🇯🇵"},
+  {id:11, date:"2026-06-15",time:"01:00",home:"Ivory Coast",   away:"Ecuador",             hf:"🇨🇮",af:"🇪🇨"},
+  {id:12, date:"2026-06-15",time:"04:00",home:"Sweden",        away:"Tunisia",             hf:"🇸🇪",af:"🇹🇳"},
+  {id:13, date:"2026-06-15",time:"18:00",home:"Spain",         away:"Cape Verde",          hf:"🇪🇸",af:"🇨🇻"},
+  {id:14, date:"2026-06-15",time:"21:00",home:"Belgium",       away:"Egypt",               hf:"🇧🇪",af:"🇪🇬"},
+  {id:15, date:"2026-06-16",time:"00:00",home:"Saudi Arabia",  away:"Uruguay",             hf:"🇸🇦",af:"🇺🇾"},
+  {id:16, date:"2026-06-16",time:"03:00",home:"Iran",          away:"New Zealand",         hf:"🇮🇷",af:"🇳🇿"},
+  {id:17, date:"2026-06-16",time:"21:00",home:"France",        away:"Senegal",             hf:"🇫🇷",af:"🇸🇳"},
+  {id:18, date:"2026-06-17",time:"00:00",home:"Iraq",          away:"Norway",              hf:"🇮🇶",af:"🇳🇴"},
+  {id:19, date:"2026-06-17",time:"03:00",home:"Argentina",     away:"Algeria",             hf:"🇦🇷",af:"🇩🇿"},
+  {id:20, date:"2026-06-17",time:"06:00",home:"Austria",       away:"Jordan",              hf:"🇦🇹",af:"🇯🇴"},
+  {id:21, date:"2026-06-17",time:"19:00",home:"Portugal",      away:"DR Congo",            hf:"🇵🇹",af:"🇨🇩"},
+  {id:22, date:"2026-06-17",time:"22:00",home:"England",       away:"Croatia",             hf:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",af:"🇭🇷"},
+  {id:23, date:"2026-06-18",time:"01:00",home:"Ghana",         away:"Panama",              hf:"🇬🇭",af:"🇵🇦"},
+  {id:24, date:"2026-06-18",time:"04:00",home:"Uzbekistan",    away:"Colombia",            hf:"🇺🇿",af:"🇨🇴"},
+  {id:25, date:"2026-06-18",time:"18:00",home:"Czech Republic",away:"South Africa",        hf:"🇨🇿",af:"🇿🇦"},
+  {id:26, date:"2026-06-18",time:"21:00",home:"Switzerland",   away:"Bosnia & Herz.",      hf:"🇨🇭",af:"🇧🇦"},
+  {id:27, date:"2026-06-19",time:"00:00",home:"Canada",        away:"Qatar",               hf:"🇨🇦",af:"🇶🇦"},
+  {id:28, date:"2026-06-19",time:"03:00",home:"Mexico",        away:"South Korea",         hf:"🇲🇽",af:"🇰🇷"},
+  {id:29, date:"2026-06-19",time:"21:00",home:"USA",           away:"Australia",           hf:"🇺🇸",af:"🇦🇺"},
+  {id:30, date:"2026-06-20",time:"00:00",home:"Scotland",      away:"Morocco",             hf:"🏴󠁧󠁢󠁳󠁣󠁴󠁿",af:"🇲🇦"},
+  {id:31, date:"2026-06-20",time:"02:30",home:"Brazil",        away:"Haiti",               hf:"🇧🇷",af:"🇭🇹"},
+  {id:32, date:"2026-06-20",time:"05:00",home:"Turkey",        away:"Paraguay",            hf:"🇹🇷",af:"🇵🇾"},
+  {id:33, date:"2026-06-20",time:"19:00",home:"Netherlands",   away:"Sweden",              hf:"🇳🇱",af:"🇸🇪"},
+  {id:34, date:"2026-06-20",time:"22:00",home:"Germany",       away:"Ivory Coast",         hf:"🇩🇪",af:"🇨🇮"},
+  {id:35, date:"2026-06-21",time:"02:00",home:"Ecuador",       away:"Curaçao",             hf:"🇪🇨",af:"🇨🇼"},
+  {id:36, date:"2026-06-21",time:"06:00",home:"Tunisia",       away:"Japan",               hf:"🇹🇳",af:"🇯🇵"},
+  {id:37, date:"2026-06-21",time:"18:00",home:"Spain",         away:"Saudi Arabia",        hf:"🇪🇸",af:"🇸🇦"},
+  {id:38, date:"2026-06-21",time:"21:00",home:"Belgium",       away:"Iran",                hf:"🇧🇪",af:"🇮🇷"},
+  {id:39, date:"2026-06-22",time:"00:00",home:"Uruguay",       away:"Cape Verde",          hf:"🇺🇾",af:"🇨🇻"},
+  {id:40, date:"2026-06-22",time:"03:00",home:"New Zealand",   away:"Egypt",               hf:"🇳🇿",af:"🇪🇬"},
+  {id:41, date:"2026-06-22",time:"19:00",home:"Argentina",     away:"Austria",             hf:"🇦🇷",af:"🇦🇹"},
+  {id:42, date:"2026-06-22",time:"23:00",home:"France",        away:"Iraq",                hf:"🇫🇷",af:"🇮🇶"},
+  {id:43, date:"2026-06-23",time:"02:00",home:"Norway",        away:"Senegal",             hf:"🇳🇴",af:"🇸🇳"},
+  {id:44, date:"2026-06-23",time:"05:00",home:"Jordan",        away:"Algeria",             hf:"🇯🇴",af:"🇩🇿"},
+  {id:45, date:"2026-06-23",time:"19:00",home:"Portugal",      away:"Uzbekistan",          hf:"🇵🇹",af:"🇺🇿"},
+  {id:46, date:"2026-06-23",time:"22:00",home:"England",       away:"Ghana",               hf:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",af:"🇬🇭"},
+  {id:47, date:"2026-06-24",time:"01:00",home:"Panama",        away:"Croatia",             hf:"🇵🇦",af:"🇭🇷"},
+  {id:48, date:"2026-06-24",time:"04:00",home:"Colombia",      away:"DR Congo",            hf:"🇨🇴",af:"🇨🇩"},
+  {id:49, date:"2026-06-25",time:"00:00",home:"Scotland",      away:"Brazil",              hf:"🏴󠁧󠁢󠁳󠁣󠁴󠁿",af:"🇧🇷"},
+  {id:50, date:"2026-06-25",time:"00:00",home:"Morocco",       away:"Haiti",               hf:"🇲🇦",af:"🇭🇹"},
+  {id:51, date:"2026-06-25",time:"03:00",home:"South Africa",  away:"South Korea",         hf:"🇿🇦",af:"🇰🇷"},
+  {id:52, date:"2026-06-25",time:"03:00",home:"Czech Republic",away:"Mexico",              hf:"🇨🇿",af:"🇲🇽"},
+  {id:53, date:"2026-06-25",time:"22:00",home:"Ecuador",       away:"Germany",             hf:"🇪🇨",af:"🇩🇪"},
+  {id:54, date:"2026-06-25",time:"22:00",home:"Curaçao",       away:"Ivory Coast",         hf:"🇨🇼",af:"🇨🇮"},
+  {id:55, date:"2026-06-26",time:"01:00",home:"Tunisia",       away:"Netherlands",         hf:"🇹🇳",af:"🇳🇱"},
+  {id:56, date:"2026-06-26",time:"01:00",home:"Japan",         away:"Sweden",              hf:"🇯🇵",af:"🇸🇪"},
+  {id:57, date:"2026-06-26",time:"04:00",home:"Paraguay",      away:"Australia",           hf:"🇵🇾",af:"🇦🇺"},
+  {id:58, date:"2026-06-26",time:"04:00",home:"Turkey",        away:"USA",                 hf:"🇹🇷",af:"🇺🇸"},
+  {id:59, date:"2026-06-26",time:"21:00",home:"Senegal",       away:"Iraq",                hf:"🇸🇳",af:"🇮🇶"},
+  {id:60, date:"2026-06-26",time:"21:00",home:"Norway",        away:"France",              hf:"🇳🇴",af:"🇫🇷"},
+  {id:61, date:"2026-06-27",time:"02:00",home:"Uruguay",       away:"Spain",               hf:"🇺🇾",af:"🇪🇸"},
+  {id:62, date:"2026-06-27",time:"02:00",home:"Cape Verde",    away:"Saudi Arabia",        hf:"🇨🇻",af:"🇸🇦"},
+  {id:63, date:"2026-06-27",time:"05:00",home:"New Zealand",   away:"Belgium",             hf:"🇳🇿",af:"🇧🇪"},
+  {id:64, date:"2026-06-27",time:"05:00",home:"Egypt",         away:"Iran",                hf:"🇪🇬",af:"🇮🇷"},
+  {id:65, date:"2026-06-27",time:"23:00",home:"Panama",        away:"England",             hf:"🇵🇦",af:"🏴󠁧󠁢󠁥󠁮󠁧󠁿"},
+  {id:66, date:"2026-06-27",time:"23:00",home:"Croatia",       away:"Ghana",               hf:"🇭🇷",af:"🇬🇭"},
+  {id:67, date:"2026-06-28",time:"01:30",home:"Colombia",      away:"Portugal",            hf:"🇨🇴",af:"🇵🇹"},
+  {id:68, date:"2026-06-28",time:"01:30",home:"DR Congo",      away:"Uzbekistan",          hf:"🇨🇩",af:"🇺🇿"},
+  {id:69, date:"2026-06-28",time:"04:00",home:"Jordan",        away:"Argentina",           hf:"🇯🇴",af:"🇦🇷"},
+  {id:70, date:"2026-06-28",time:"04:00",home:"Algeria",       away:"Austria",             hf:"🇩🇿",af:"🇦🇹"},
+];
+
+// ─────────────────────────────────────────────
+//  STATE
+// ─────────────────────────────────────────────
+let user = JSON.parse(localStorage.getItem('wm26_user') || 'null');
+let tips = {};
+let submittedTips = {};   // { gameId: 'win'|'draw'|'lose' }
+let allTips = {};         // { gameId: {win:N, draw:N, lose:N} }
+let results = {};         // { gameId: 'win'|'draw'|'lose', 'score_N': {home,away} }
+let koGames = [];
+let currentDate = null;
+let currentNav = 'group';
+let isDark = localStorage.getItem('wm26_theme') === 'dark';
+let whTimers = {};
+let dbConnected = false;
+
+// ─────────────────────────────────────────────
+//  THEME
+// ─────────────────────────────────────────────
+function applyTheme(){
+  document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+  const b = document.getElementById('theme-btn');
+  if (b) b.textContent = isDark ? '☀️' : '🌙';
+}
+function toggleTheme(){
+  isDark = !isDark;
+  localStorage.setItem('wm26_theme', isDark ? 'dark' : 'light');
+  applyTheme();
+}
+applyTheme();
+
+// ─────────────────────────────────────────────
+//  DB INIT — load all shared data on startup
+// ─────────────────────────────────────────────
+async function initDB(){
+  try {
+    // Load results
+    const dbResults = await sbSelect('results', 'select=game_id,result,score_home,score_away');
+    dbResults.forEach(r => {
+      results[r.game_id] = r.result;
+      if (r.score_home !== null && r.score_away !== null) {
+        results['score_' + r.game_id] = { home: r.score_home, away: r.score_away };
+      }
+    });
+
+    // Load all tips → build distribution
+    const dbTips = await sbSelect('tips', 'select=game_id,tip');
+    dbTips.forEach(t => {
+      if (!allTips[t.game_id]) allTips[t.game_id] = { win:0, draw:0, lose:0 };
+      allTips[t.game_id][t.tip] = (allTips[t.game_id][t.tip] || 0) + 1;
+    });
+
+    // Load KO games
+    const dbKO = await sbSelect('ko_games', 'order=id.asc');
+    koGames = dbKO.map(g => ({
+      id: g.id, home: g.home, away: g.away, hf: g.hf||'', af: g.af||'',
+      date: g.date, time: g.time||'21:00', round: g.round||'Knockout', isKO: true
+    }));
+
+    // Load user's own submitted tips if logged in
+    if (user) {
+      const myTips = await sbSelect('tips', `roblox=eq.${encodeURIComponent(user.roblox.toLowerCase())}&select=game_id,tip`);
+      submittedTips = {};
+      myTips.forEach(t => { submittedTips[t.game_id] = t.tip; });
+    }
+
+    dbConnected = true;
+  } catch(e) {
+    console.error('DB init error:', e);
+    dbConnected = false;
+  }
+
+  // Hide loading screen
+  document.getElementById('db-loading').style.display = 'none';
+
+  // Show app or login
+  if (user) {
+    showApp();
+  } else {
+    document.getElementById('login-screen').classList.add('active');
+  }
+}
+
+// ─────────────────────────────────────────────
+//  AUTH
+// ─────────────────────────────────────────────
+function swTab(t){
+  document.getElementById('tab-li').classList.toggle('active', t==='li');
+  document.getElementById('tab-re').classList.toggle('active', t==='re');
+  document.getElementById('form-li').style.display = t==='li' ? '' : 'none';
+  document.getElementById('form-re').style.display = t==='re' ? '' : 'none';
+}
+
+async function doRegister(){
+  const roblox  = document.getElementById('re-roblox').value.trim();
+  const discord = document.getElementById('re-discord').value.trim();
+  const pass    = document.getElementById('re-pass').value;
+  const pass2   = document.getElementById('re-pass2').value;
+  if (!roblox||!discord||!pass){ toast('Please fill in all fields','error'); return; }
+  if (pass !== pass2){ toast('Passwords do not match','error'); return; }
+  if (pass.length < 4){ toast('Password must be at least 4 characters','error'); return; }
+
+  const btn = document.getElementById('reg-btn');
+  btn.disabled = true; btn.textContent = 'Creating…';
+
+  try {
+    // Check if username exists
+    const existing = await sbSelect('users', `roblox=eq.${encodeURIComponent(roblox.toLowerCase())}&select=roblox`);
+    if (existing.length > 0){ toast('This Roblox name is already registered','error'); btn.disabled=false; btn.textContent='CREATE ACCOUNT'; return; }
+
+    const isAdmin = roblox.toLowerCase() === ADMIN_USER.toLowerCase() && pass === ADMIN_PASS;
+    await sbInsert('users', { roblox: roblox.toLowerCase(), discord, password: pass, is_admin: isAdmin });
+
+    toast('Account created! You can now log in','success');
+    document.getElementById('re-roblox').value='';
+    document.getElementById('re-discord').value='';
+    document.getElementById('re-pass').value='';
+    document.getElementById('re-pass2').value='';
+    swTab('li');
+    document.getElementById('li-roblox').value = roblox;
+  } catch(e) {
+    toast('Error: ' + (e.message||'Registration failed'), 'error');
+  }
+  btn.disabled=false; btn.textContent='CREATE ACCOUNT';
+}
+
+async function doLogin(){
+  const roblox = document.getElementById('li-roblox').value.trim();
+  const pass   = document.getElementById('li-pass').value;
+  if (!roblox||!pass){ toast('Please fill in all fields','error'); return; }
+
+  const btn = document.getElementById('login-btn');
+  btn.disabled=true; btn.textContent='Logging in…';
+
+  try {
+    // Auto-create admin if first login
+    if (roblox.toLowerCase() === ADMIN_USER.toLowerCase() && pass === ADMIN_PASS) {
+      const existing = await sbSelect('users', `roblox=eq.${encodeURIComponent(roblox.toLowerCase())}&select=roblox`);
+      if (existing.length === 0) {
+        await sbInsert('users', { roblox: roblox.toLowerCase(), discord: 'Admin', password: pass, is_admin: true });
+      }
+    }
+
+    const rows = await sbSelect('users', `roblox=eq.${encodeURIComponent(roblox.toLowerCase())}&select=roblox,discord,password,is_admin`);
+    if (rows.length === 0){ toast('No account found — please register first','error'); btn.disabled=false; btn.textContent='LOG IN'; return; }
+    const acc = rows[0];
+    if (acc.password !== pass){ toast('Wrong password','error'); btn.disabled=false; btn.textContent='LOG IN'; return; }
+
+    const isAdmin = roblox.toLowerCase() === ADMIN_USER.toLowerCase() && pass === ADMIN_PASS;
+    user = { roblox: acc.roblox, discord: acc.discord, isAdmin };
+    localStorage.setItem('wm26_user', JSON.stringify(user));
+
+    // Load user's tips
+    const myTips = await sbSelect('tips', `roblox=eq.${encodeURIComponent(acc.roblox)}&select=game_id,tip`);
+    submittedTips = {};
+    myTips.forEach(t => { submittedTips[t.game_id] = t.tip; });
+
+    tips = {};
+    showApp();
+  } catch(e) {
+    toast('Error: ' + (e.message||'Login failed'), 'error');
+  }
+  btn.disabled=false; btn.textContent='LOG IN';
+}
+
+function doLogout(){
+  user = null; tips = {}; submittedTips = {};
+  localStorage.removeItem('wm26_user');
+  closeModal('profile');
+  document.getElementById('login-screen').classList.add('active');
+  document.getElementById('app').classList.remove('active');
+  document.getElementById('li-pass').value='';
+}
+
+function showLogin(){
+  document.getElementById('login-screen').classList.add('active');
+  document.getElementById('app').classList.remove('active');
+}
+
+function showApp(){
+  document.getElementById('login-screen').classList.remove('active');
+  document.getElementById('app').classList.add('active');
+  if (user) {
+    document.getElementById('hname').textContent = user.roblox;
+    document.getElementById('hav').textContent   = user.roblox[0].toUpperCase();
+    document.getElementById('notice-bar').style.display = 'none';
+  } else {
+    document.getElementById('hname').textContent = 'Guest';
+    document.getElementById('hav').textContent   = '?';
+    document.getElementById('notice-bar').style.display = 'block';
+  }
+  updateProfileStats();
+  renderTabs();
+  renderGames();
+}
+
+// ─────────────────────────────────────────────
+//  NAV
+// ─────────────────────────────────────────────
+function switchNav(v){
+  currentNav = v;
+  ['group','ko','mytips'].forEach(n => {
+    document.getElementById('ntab-'+n).classList.toggle('active', n===v);
+    document.getElementById('view-'+n).style.display = n===v ? '' : 'none';
+  });
+  if (v === 'mytips') renderMyTips();
+  if (v === 'ko')     renderKOView();
+}
+
+// ─────────────────────────────────────────────
+//  DATES
+// ─────────────────────────────────────────────
+function getUniqueDates(){ return [...new Set(GROUP_GAMES.map(g=>g.date))].sort(); }
+function gameDateTime(g){ return new Date(g.date+'T'+g.time+':00+02:00'); }
+function isLocked(g){ return Date.now() >= gameDateTime(g).getTime() - 10*60*1000; }
+function fmtTab(d){
+  const dt = new Date(d+'T12:00:00');
+  const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return `${days[dt.getDay()]} ${dt.getDate()} ${months[dt.getMonth()]}`;
+}
+
+let dateTabIndex = 0;
+const VISIBLE_TABS = 5;
+
+function renderTabs(){
+  const dates = getUniqueDates();
+  const tabs = document.getElementById('date-tabs');
+  if (!tabs) return;
+  if (!currentDate){
+    const today = new Date().toISOString().slice(0,10);
+    currentDate = dates.find(d=>d>=today) || dates[dates.length-1];
+  }
+  const ci = dates.indexOf(currentDate);
+  if (ci >= 0) dateTabIndex = Math.max(0, Math.min(ci, dates.length - VISIBLE_TABS));
+  tabs.innerHTML='';
+  const visible = dates.slice(dateTabIndex, dateTabIndex + VISIBLE_TABS);
+  visible.forEach(d => {
+    const btn = document.createElement('div');
+    btn.className = 'dtab' + (d===currentDate?' active':'');
+    btn.textContent = fmtTab(d);
+    btn.onclick = () => { currentDate=d; renderTabs(); renderGames(); };
+    tabs.appendChild(btn);
+  });
+}
+
+function shiftDate(dir){
+  const dates = getUniqueDates();
+  const ci = dates.indexOf(currentDate);
+  const ni = Math.max(0, Math.min(dates.length-1, ci+dir));
+  currentDate = dates[ni];
+  renderTabs();
+  renderGames();
+}
+
+// ─────────────────────────────────────────────
+//  RENDER GAMES
+// ─────────────────────────────────────────────
+function renderGames(){
+  const list = document.getElementById('games-list');
+  if (!list) return;
+  const games = GROUP_GAMES.filter(g=>g.date===currentDate);
+  if (!games.length){ list.innerHTML='<div style="text-align:center;padding:40px;color:var(--text3);font-size:13px;">No games on this day</div>'; return; }
+  list.innerHTML='';
+  games.forEach(g => {
+    const locked    = isLocked(g);
+    const pending   = tips[g.id];
+    const submitted = submittedTips[g.id];
+    const result    = results[g.id];
+    const dist      = allTips[g.id] || {win:0,draw:0,lose:0};
+    const tipCount  = dist.win+dist.draw+dist.lose;
+    const total     = tipCount||1;
+    const wp = Math.round(dist.win/total*100);
+    const dp = Math.round(dist.draw/total*100);
+    const lp = 100-wp-dp;
+    const scoreData = results['score_'+g.id]||null;
+
+    let resultPillHtml='';
+    if(result){
+      if(result==='win')  resultPillHtml=`<div class="result-pill home">🟢 ${g.home} Win</div>`;
+      else if(result==='draw') resultPillHtml=`<div class="result-pill draw">🟡 Draw</div>`;
+      else                resultPillHtml=`<div class="result-pill away">🔴 ${g.away} Win</div>`;
+    }
+
+    let myBadge='';
+    if(submitted){
+      const lbl = submitted==='win'?g.home+' Win':submitted==='draw'?'Draw':g.away+' Win';
+      myBadge=`<span class="my-tip-badge ${submitted}">✓ ${lbl}</span>`;
+    }
+
+    const scoreHtml = scoreData
+      ? `<div class="score-display">${scoreData.home} : ${scoreData.away}</div>`
+      : `<div class="vs-b">VS</div>`;
+
+    const card = document.createElement('div');
+    card.className='game-card';
+    card.innerHTML=`
+      <div class="game-inner">
+        <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:${(locked||result)?'8px':'0'}">
+          ${result ? resultPillHtml : locked ? `<div class="locked-pill">🔒 Closed</div>` : ''}
+          ${myBadge}
+        </div>
+        <div class="teams-row">
+          <div class="team-side"><span class="tflag">${g.hf}</span><span class="tname">${g.home}</span></div>
+          ${scoreHtml}
+          <div class="team-side right"><span class="tflag">${g.af}</span><span class="tname">${g.away}</span></div>
+        </div>
+        ${!locked && !result ? `
+        <div class="tip-row">
+          <button class="tip-btn win ${pending==='win'?'selected':''}" data-gid="${g.id}" data-tip="win">
+            <span class="tn">${g.home}</span><span class="tl">Win</span>
+          </button>
+          <button class="tip-btn draw ${pending==='draw'?'selected':''}" data-gid="${g.id}" data-tip="draw">
+            <span class="tn">Draw</span><span class="tl">X</span>
+          </button>
+          <button class="tip-btn lose ${pending==='lose'?'selected':''}" data-gid="${g.id}" data-tip="lose">
+            <span class="tn">${g.away}</span><span class="tl">Win</span>
+          </button>
+        </div>
+        <div class="submit-row">
+          <button class="submit-tip-btn" data-gid="${g.id}" ${!pending?'disabled':''} onclick="submitTip(${g.id})">
+            ${pending ? '📨 Submit Prediction' : submitted ? '✓ Submitted' : 'Select a result first'}
+          </button>
+          ${pending ? `<span class="pending-badge">Not saved yet</span>` : ''}
+        </div>` : ''}
+        <div class="dist-bar">
+          ${tipCount > 0 ? `
+          <div class="dist-track">
+            <div class="ds win" style="width:${wp}%"></div>
+            <div class="ds draw" style="width:${dp}%"></div>
+            <div class="ds lose" style="width:${lp}%"></div>
+          </div>
+          <div class="dist-labels">
+            <span class="di wc"><span class="dd win"></span>${wp}% ${g.home}</span>
+            <span class="di dc"><span class="dd draw"></span>${dp}% Draw</span>
+            <span class="di lc"><span class="dd lose"></span>${lp}% ${g.away}</span>
+          </div>` : ''}
+          <div class="tip-count">${tipCount===0 ? 'No predictions yet' : `${tipCount} prediction${tipCount!==1?'s':''} submitted`}</div>
+        </div>
+      </div>`;
+    list.appendChild(card);
+  });
+
+  document.querySelectorAll('.tip-btn').forEach(btn => {
+    btn.addEventListener('click', function(){
+      if (!user){ toast('Please log in to place a prediction!','error'); return; }
+      const gid = parseInt(this.dataset.gid);
+      const tip = this.dataset.tip;
+      if (tips[gid]===tip){ delete tips[gid]; } else { tips[gid]=tip; }
+      renderGames();
+    });
+  });
+}
+
+// ─────────────────────────────────────────────
+//  SUBMIT TIP → Supabase
+// ─────────────────────────────────────────────
+async function submitTip(gid){
+  if (!user){ toast('Please log in!','error'); return; }
+  const tip = tips[gid];
+  if (!tip){ toast('Select a result first','error'); return; }
+  const g = GROUP_GAMES.find(x=>x.id===gid);
+  const prevSubmitted = submittedTips[gid];
+
+  try {
+    // Upsert tip in Supabase (insert or update by roblox+game_id)
+    await sbUpsert('tips', {
+      roblox: user.roblox.toLowerCase(),
+      game_id: gid,
+      tip: tip
+    }, 'roblox,game_id');
+
+    // Update local distribution
+    if (!allTips[gid]) allTips[gid] = {win:0,draw:0,lose:0};
+    if (prevSubmitted) allTips[gid][prevSubmitted] = Math.max(0, (allTips[gid][prevSubmitted]||0)-1);
+    allTips[gid][tip] = (allTips[gid][tip]||0) + 1;
+
+    submittedTips[gid] = tip;
+    delete tips[gid];
+
+    updateProfileStats();
+    renderGames();
+    toast('✅ Prediction submitted!','success');
+
+    // Discord webhook
+    clearTimeout(whTimers[gid]);
+    whTimers[gid] = setTimeout(() => {
+      const action = prevSubmitted ? 'changed' : 'placed';
+      const emoji  = tip==='win'?'🟢':tip==='draw'?'🟡':'🔴';
+      const tLabel = t => t==='win'?g.home+' Win':t==='draw'?'Draw':g.away+' Win';
+      const desc = action==='changed'
+        ? `🔄 Changed: **${tLabel(prevSubmitted)}** → **${emoji} ${tLabel(tip)}**\nGame: **${g.home} ${g.hf} vs ${g.af} ${g.away}**`
+        : `${emoji} Predicted **${tLabel(tip)}**\nGame: **${g.home} ${g.hf} vs ${g.af} ${g.away}**`;
+      fetch(WEBHOOK, {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({embeds:[{
+          title:'⚽ WC 2026 — Prediction',
+          description: desc,
+          color: tip==='win'?0x1a9e4a:tip==='draw'?0xc47d00:0xc93030,
+          fields:[
+            {name:'Roblox',value:user.roblox,inline:true},
+            {name:'Discord',value:user.discord,inline:true},
+            {name:'Date',value:g.date,inline:true}
+          ],
+          footer:{text:'WC 2026 Prediction Game'},
+          timestamp: new Date().toISOString()
+        }]})
+      }).catch(()=>{});
+    }, 3000);
+
+  } catch(e) {
+    toast('Failed to save: ' + (e.message||'DB error'), 'error');
+  }
+}
+
+// ─────────────────────────────────────────────
+//  KO VIEW
+// ─────────────────────────────────────────────
+function renderKOView(){
+  const el = document.getElementById('ko-games-list');
+  if (koGames.length === 0) {
+    el.innerHTML=`<div class="ko-placeholder">
+      <div class="coming-soon-badge">COMING SOON</div>
+      <div class="ko-icon">🏆</div>
+      <h3>Knockout Stage</h3>
+      <p>The knockout rounds haven't started yet.<br>Check back once the group stage is complete!</p>
+    </div>`;
+    return;
+  }
+  el.innerHTML='';
+  const rounds = [...new Set(koGames.map(g=>g.round))];
+  rounds.forEach(round => {
+    const header = document.createElement('h3');
+    header.style.cssText='font-size:14px;font-weight:700;margin:16px 0 8px;color:var(--text2);';
+    header.textContent='🏆 '+round;
+    el.appendChild(header);
+    koGames.filter(g=>g.round===round).forEach(g => {
+      const card = document.createElement('div');
+      card.className='game-card';
+      const locked = isLocked(g);
+      const pending = tips[g.id];
+      const submitted = submittedTips[g.id];
+      const result = results[g.id];
+      const dist = allTips[g.id]||{win:0,draw:0,lose:0};
+      const tipCount = dist.win+dist.draw+dist.lose;
+      const total=tipCount||1;
+      const wp=Math.round(dist.win/total*100), dp=Math.round(dist.draw/total*100), lp=100-wp-dp;
+      const scoreData=results['score_'+g.id]||null;
+      let myBadge='';
+      if(submitted){const lbl=submitted==='win'?g.home+' Win':submitted==='draw'?'Draw':g.away+' Win';myBadge=`<span class="my-tip-badge ${submitted}">✓ ${lbl}</span>`;}
+      const scoreHtml=scoreData?`<div class="score-display">${scoreData.home} : ${scoreData.away}</div>`:`<div class="vs-b">VS</div>`;
+      let resultPillHtml='';
+      if(result){if(result==='win')resultPillHtml=`<div class="result-pill home">🟢 ${g.home} Win</div>`;else if(result==='draw')resultPillHtml=`<div class="result-pill draw">🟡 Draw</div>`;else resultPillHtml=`<div class="result-pill away">🔴 ${g.away} Win</div>`;}
+      card.innerHTML=`<div class="game-inner">
+        <div style="font-size:10px;color:var(--text3);margin-bottom:6px;">${g.date} · ${g.time} · ${g.round}</div>
+        <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:6px;">${result?resultPillHtml:locked?'<div class="locked-pill">🔒 Closed</div>':''}${myBadge}</div>
+        <div class="teams-row"><div class="team-side"><span class="tflag">${g.hf}</span><span class="tname">${g.home}</span></div>${scoreHtml}<div class="team-side right"><span class="tflag">${g.af}</span><span class="tname">${g.away}</span></div></div>
+        ${!locked&&!result?`<div class="tip-row"><button class="tip-btn win ${pending==='win'?'selected':''}" data-gid="${g.id}" data-tip="win"><span class="tn">${g.home}</span><span class="tl">Win</span></button><button class="tip-btn draw ${pending==='draw'?'selected':''}" data-gid="${g.id}" data-tip="draw"><span class="tn">Draw</span><span class="tl">X</span></button><button class="tip-btn lose ${pending==='lose'?'selected':''}" data-gid="${g.id}" data-tip="lose"><span class="tn">${g.away}</span><span class="tl">Win</span></button></div><div class="submit-row"><button class="submit-tip-btn" ${!pending?'disabled':''} onclick="submitTipKO(${g.id})">📨 Submit Prediction</button>${pending?`<span class="pending-badge">Not saved yet</span>`:''}</div>`:''}
+        <div class="dist-bar">${tipCount>0?`<div class="dist-track"><div class="ds win" style="width:${wp}%"></div><div class="ds draw" style="width:${dp}%"></div><div class="ds lose" style="width:${lp}%"></div></div><div class="dist-labels"><span class="di wc"><span class="dd win"></span>${wp}% ${g.home}</span><span class="di dc"><span class="dd draw"></span>${dp}% Draw</span><span class="di lc"><span class="dd lose"></span>${lp}% ${g.away}</span></div>`:''}<div class="tip-count">${tipCount===0?'No predictions yet':`${tipCount} prediction${tipCount!==1?'s':''} submitted`}</div></div>
+      </div>`;
+      el.appendChild(card);
+    });
+  });
+  document.querySelectorAll('.tip-btn').forEach(btn => {
+    btn.addEventListener('click', function(){
+      if(!user){toast('Please log in!','error');return;}
+      const gid=parseInt(this.dataset.gid);const tip=this.dataset.tip;
+      if(tips[gid]===tip){delete tips[gid];}else{tips[gid]=tip;}
+      renderKOView();
+    });
+  });
+}
+
+async function submitTipKO(gid){
+  const g=koGames.find(x=>x.id===gid);
+  if(!g) return;
+  const tip=tips[gid];
+  if(!tip){toast('Select a result first','error');return;}
+  if(!user){toast('Please log in!','error');return;}
+  const prevSubmitted=submittedTips[gid];
+  try{
+    await sbUpsert('tips',{roblox:user.roblox.toLowerCase(),game_id:gid,tip},'roblox,game_id');
+    if(!allTips[gid])allTips[gid]={win:0,draw:0,lose:0};
+    if(prevSubmitted)allTips[gid][prevSubmitted]=Math.max(0,(allTips[gid][prevSubmitted]||0)-1);
+    allTips[gid][tip]=(allTips[gid][tip]||0)+1;
+    submittedTips[gid]=tip;delete tips[gid];
+    updateProfileStats();renderKOView();toast('✅ Prediction submitted!','success');
+  }catch(e){toast('Failed: '+(e.message||'DB error'),'error');}
+}
+
+// ─────────────────────────────────────────────
+//  MY TIPS VIEW
+// ─────────────────────────────────────────────
+function renderMyTips(){
+  const el = document.getElementById('mytips-content');
+  if (!user){ el.innerHTML='<div class="notice" onclick="showLogin()">Log in to see your predictions</div>'; return; }
+  const myKeys = Object.keys(submittedTips);
+  if (myKeys.length===0){ el.innerHTML='<p style="text-align:center;color:var(--text3);padding:40px 0;font-size:13px;">No predictions submitted yet</p>'; return; }
+  el.innerHTML='<div class="mytips-list" id="mt-list"></div>';
+  const listEl = document.getElementById('mt-list');
+  const allGames = [...GROUP_GAMES, ...koGames];
+  myKeys.forEach(gid => {
+    const g = allGames.find(x=>x.id===parseInt(gid));
+    if (!g) return;
+    const tip = submittedTips[gid];
+    const result = results[gid];
+    let statusHtml='';
+    if(!result) statusHtml=`<span class="correct-badge pending">Pending</span>`;
+    else if(result===tip) statusHtml=`<span class="correct-badge yes">✓ Correct</span>`;
+    else statusHtml=`<span class="correct-badge no">✗ Wrong</span>`;
+    const tLabel = tip==='win'?g.home+' Win':tip==='draw'?'Draw':g.away+' Win';
+    const div=document.createElement('div');
+    div.className='mt-card';
+    div.innerHTML=`
+      <div>
+        <div class="mt-match">${g.hf} ${g.home} vs ${g.away} ${g.af}</div>
+        <div class="mt-date">${g.date} · Your pick: <strong>${tLabel}</strong></div>
+      </div>
+      <div class="mt-right">${statusHtml}</div>`;
+    listEl.appendChild(div);
+  });
+}
+
+// ─────────────────────────────────────────────
+//  PROFILE
+// ─────────────────────────────────────────────
+function updateProfileStats(){
+  if (!user) return;
+  const cnt = Object.keys(submittedTips).length;
+  let correct = 0;
+  Object.keys(submittedTips).forEach(gid => {
+    if (results[gid] && results[gid]===submittedTips[gid]) correct++;
+  });
+  document.getElementById('p-roblox').textContent  = user.roblox;
+  document.getElementById('p-discord').textContent = user.discord;
+  document.getElementById('p-tips').textContent    = cnt;
+  document.getElementById('p-correct').textContent = correct;
+  document.getElementById('p-points').textContent  = correct;
+  document.getElementById('p-rank').textContent    = '–';
+  document.getElementById('admin-panel-btn').style.display = user.isAdmin ? '' : 'none';
+  document.getElementById('admin-badge-hdr').innerHTML = user.isAdmin ? '<span class="admin-badge">ADMIN</span>' : '';
+  const badge = document.getElementById('db-status-badge');
+  if (badge){ badge.textContent = dbConnected ? '● Connected' : '● Offline'; badge.className='db-badge'+(dbConnected?'':' err'); }
+}
+
+function openProfile(){
+  if (!user){ showLogin(); return; }
+  updateProfileStats();
+  openModal('profile');
+}
+
+// ─────────────────────────────────────────────
+//  ADMIN
+// ─────────────────────────────────────────────
+function openAdmin(){
+  closeModal('profile');
+  renderAdminPanel();
+  openModal('admin');
+}
+
+function renderAdminPanel(){
+  const el = document.getElementById('admin-games-list');
+  el.innerHTML='';
+  GROUP_GAMES.forEach(g => {
+    const r  = results[g.id]||'';
+    const sc = results['score_'+g.id]||{home:'',away:''};
+    const row = document.createElement('div');
+    row.className='game-result-row';
+    row.innerHTML=`
+      <div class="gr-teams">${g.hf} ${g.home} vs ${g.away} ${g.af}<div class="gr-date">${g.date}</div></div>
+      <div class="score-inputs">
+        <input type="number" min="0" max="20" id="sh-${g.id}" value="${sc.home}" placeholder="0">
+        <span class="score-sep">:</span>
+        <input type="number" min="0" max="20" id="sa-${g.id}" value="${sc.away}" placeholder="0">
+      </div>
+      <div class="res-btns">
+        <button class="res-btn home ${r==='win'?'active':''}"  onclick="setResult(${g.id},'win')">H</button>
+        <button class="res-btn draw ${r==='draw'?'active':''}" onclick="setResult(${g.id},'draw')">X</button>
+        <button class="res-btn away ${r==='lose'?'active':''}" onclick="setResult(${g.id},'lose')">A</button>
+      </div>
+      <button class="save-res-btn" onclick="saveResult(${g.id})">Save</button>`;
+    el.appendChild(row);
+  });
+
+  const koEl = document.getElementById('ko-matches-list');
+  koEl.innerHTML = koGames.length===0 ? '<p style="font-size:12px;color:var(--text3)">No KO matches added yet</p>' : '';
+  koGames.forEach((g,i) => {
+    const div=document.createElement('div');
+    div.style.cssText='display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border2);font-size:12px;';
+    div.innerHTML=`<span style="flex:1">${g.hf||''} ${g.home} vs ${g.away} ${g.af||''} <span style="color:var(--text3)">(${g.date} · ${g.round})</span></span>
+      <button onclick="removeKO(${i})" style="background:var(--lose-bg);border:1px solid var(--lose-b);color:var(--lose);border-radius:6px;padding:3px 8px;font-size:11px;cursor:pointer;">Remove</button>`;
+    koEl.appendChild(div);
+  });
+}
+
+let adminPendingResult = {};
+function setResult(gid, res){
+  adminPendingResult[gid]=res;
+  results[gid]=res;
+  renderAdminPanel();
+}
+
+async function saveResult(gid){
+  const sh = document.getElementById('sh-'+gid);
+  const sa = document.getElementById('sa-'+gid);
+  if (!results[gid]){ toast('Select a result first (H/X/A)','error'); return; }
+
+  const scoreHome = (sh&&sh.value!=='') ? parseInt(sh.value) : null;
+  const scoreAway = (sa&&sa.value!=='') ? parseInt(sa.value) : null;
+
+  try {
+    await sbUpsert('results', {
+      game_id:    gid,
+      result:     results[gid],
+      score_home: scoreHome,
+      score_away: scoreAway
+    }, 'game_id');
+
+    if (scoreHome!==null && scoreAway!==null) {
+      results['score_'+gid] = { home: scoreHome, away: scoreAway };
+    }
+    toast('Result saved!','success');
+    renderGames();
+    renderAdminPanel();
+  } catch(e) {
+    toast('Save failed: '+(e.message||'DB error'), 'error');
+  }
+}
+
+async function addKOMatch(){
+  const home  = document.getElementById('ko-home').value.trim();
+  const away  = document.getElementById('ko-away').value.trim();
+  const date  = document.getElementById('ko-date').value.trim();
+  const time  = document.getElementById('ko-time').value.trim()||'21:00';
+  const round = document.getElementById('ko-round').value.trim()||'Knockout';
+  if (!home||!away||!date){ toast('Fill in home, away, and date','error'); return; }
+
+  // Parse flag from team string (e.g. "Germany 🇩🇪")
+  const flagRe = /(\p{Emoji_Flag_Sequence}|\p{Regional_Indicator}{2})/u;
+  const hMatch = home.match(flagRe), aMatch = away.match(flagRe);
+  const hf = hMatch?hMatch[0]:'', af = aMatch?aMatch[0]:'';
+  const hName = home.replace(flagRe,'').trim(), aName = away.replace(flagRe,'').trim();
+
+  try {
+    const rows = await sbInsert('ko_games', { home:hName, away:aName, hf, af, date, time, round });
+    const newGame = {id:rows[0].id, home:hName, away:aName, hf, af, date, time, round, isKO:true};
+    koGames.push(newGame);
+    document.getElementById('ko-home').value='';
+    document.getElementById('ko-away').value='';
+    document.getElementById('ko-date').value='';
+    document.getElementById('ko-round').value='';
+    toast('KO match added!','success');
+    renderAdminPanel();
+  } catch(e) {
+    toast('Failed: '+(e.message||'DB error'), 'error');
+  }
+}
+
+async function removeKO(i){
+  const g = koGames[i];
+  try {
+    await sbDelete('ko_games', {id: g.id});
+    koGames.splice(i,1);
+    toast('Match removed');
+    renderAdminPanel();
+  } catch(e) {
+    toast('Failed: '+(e.message||'DB error'), 'error');
+  }
+}
+
+// ─────────────────────────────────────────────
+//  MODALS & TOAST
+// ─────────────────────────────────────────────
+function openModal(id){ document.getElementById('modal-'+id).classList.add('open'); }
+function closeModal(id){ document.getElementById('modal-'+id).classList.remove('open'); }
+document.querySelectorAll('.modal-overlay').forEach(el => {
+  el.addEventListener('click', function(e){ if(e.target===this) this.classList.remove('open'); });
+});
+
+let toastT;
+function toast(msg, type=''){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.className=(type?type+' ':'')+'show';
+  clearTimeout(toastT);
+  toastT=setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+// ─────────────────────────────────────────────
+//  KEYBOARD
+// ─────────────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if (e.key!=='Enter') return;
+  const liActive = document.getElementById('form-li').style.display!=='none';
+  const screen   = document.getElementById('login-screen').classList.contains('active');
+  if (screen){ liActive ? doLogin() : doRegister(); }
+});
+
+// ─────────────────────────────────────────────
+//  START
+// ─────────────────────────────────────────────
+initDB();
+</script>
+</body>
+</html>
