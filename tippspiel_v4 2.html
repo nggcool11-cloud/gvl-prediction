@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WC 2026 — Predictions</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#f4f4f0;--surface:#fff;--card:#fff;--card2:#f7f7f3;--border:rgba(0,0,0,0.1);--border2:rgba(0,0,0,0.06);
+  --text:#111;--text2:#555;--text3:#999;--accent:#e8a000;--accent-t:#fff;
+  --win:#1a9e4a;--win-bg:#e8f7ed;--win-b:#a3d9b5;
+  --draw:#c47d00;--draw-bg:#fdf3dc;--draw-b:#f0c96a;
+  --lose:#c93030;--lose-bg:#fce8e8;--lose-b:#f0a3a3;
+  --sh:0 1px 3px rgba(0,0,0,0.08);--sh-lg:0 4px 20px rgba(0,0,0,0.12);
+  --r:12px;--rs:8px;
+}
+[data-theme="dark"]{
+  --bg:#0d0d0d;--surface:#181818;--card:#1e1e1e;--card2:#252525;--border:rgba(255,255,255,0.1);--border2:rgba(255,255,255,0.05);
+  --text:#f0f0ec;--text2:#aaa;--text3:#555;
+  --win:#22c55e;--win-bg:rgba(34,197,94,0.12);--win-b:rgba(34,197,94,0.3);
+  --draw:#f59e0b;--draw-bg:rgba(245,158,11,0.12);--draw-b:rgba(245,158,11,0.3);
+  --lose:#ef4444;--lose-bg:rgba(239,68,68,0.12);--lose-b:rgba(239,68,68,0.3);
+  --sh:0 1px 4px rgba(0,0,0,0.5);--sh-lg:0 4px 20px rgba(0,0,0,0.6);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;transition:background .2s,color .2s;}
+button,input{font-family:'Inter',sans-serif;}
+
+/* HEADER */
+header{background:var(--surface);border-bottom:1px solid var(--border);padding:0 16px;display:flex;align-items:center;justify-content:space-between;height:58px;position:sticky;top:0;z-index:100;box-shadow:var(--sh);}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:3px;color:var(--text);display:flex;align-items:center;gap:6px;cursor:pointer;}
+.logo span{color:var(--accent);}
+.hright{display:flex;align-items:center;gap:8px;}
+.icon-btn{width:34px;height:34px;border-radius:50%;background:var(--card2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px;transition:border-color .15s;flex-shrink:0;}
+.icon-btn:hover{border-color:var(--accent);}
+
+.profile-btn{display:flex;align-items:center;gap:8px;background:var(--card2);border:1px solid var(--border);border-radius:99px;padding:4px 12px 4px 4px;cursor:pointer;transition:border-color .15s;max-width:150px;}
+.profile-btn:hover{border-color:var(--accent);}
+.av{width:26px;height:26px;border-radius:50%;background:var(--accent);color:var(--accent-t);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px;flex-shrink:0;}
+.pname{font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+/* SCREENS */
+.screen{display:none;}
+.screen.active{display:flex;}
+#login-screen{min-height:100vh;align-items:center;justify-content:center;padding:20px;position:relative;overflow:hidden;}
+#login-screen .login-wrap{position:relative;}
+#app{display:none;flex-direction:column;}
+#app.active{display:flex;}
+
+/* LOGIN */
+.login-wrap{width:400px;max-width:100%;}
+.login-hdr{text-align:center;margin-bottom:24px;}
+.login-hdr .big{font-family:'Bebas Neue',sans-serif;font-size:50px;letter-spacing:5px;color:var(--text);line-height:1;}
+.login-hdr .big span{color:var(--accent);}
+.login-hdr .sub{font-size:13px;color:var(--text2);margin-top:5px;}
+.atabs{display:flex;background:var(--card2);border-radius:var(--r);padding:4px;margin-bottom:16px;border:1px solid var(--border);}
+.atab{flex:1;padding:8px;text-align:center;font-size:13px;font-weight:600;border-radius:calc(var(--r) - 3px);cursor:pointer;transition:all .15s;color:var(--text2);}
+.atab.active{background:var(--surface);color:var(--text);box-shadow:var(--sh);}
+.fcard{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:22px;box-shadow:var(--sh);}
+.igrp{margin-bottom:12px;}
+.igrp label{font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:5px;}
+.igrp input{width:100%;padding:9px 12px;background:var(--card2);border:1px solid var(--border);border-radius:var(--rs);color:var(--text);font-size:13px;outline:none;transition:border-color .15s;}
+.igrp input:focus{border-color:var(--accent);}
+.igrp input::placeholder{color:var(--text3);}
+.sbtn{width:100%;padding:11px;background:var(--accent);color:var(--accent-t);border:none;border-radius:var(--rs);font-size:13px;font-weight:700;cursor:pointer;margin-top:4px;transition:opacity .15s;letter-spacing:.5px;}
+.sbtn:hover{opacity:.88;}
+.sbtn:disabled{opacity:.45;cursor:not-allowed;}
+.fp-box{background:rgba(201,48,48,0.25);border:1px solid rgba(240,163,163,0.4);border-radius:var(--rs);padding:10px 12px;margin-top:14px;}
+.fp-box .fpt{font-size:11px;font-weight:700;color:var(--lose);margin-bottom:3px;}
+.fp-box p{font-size:11px;color:var(--text2);line-height:1.6;}
+
+
+/* NAV TABS (main) */
+.nav-tabs{display:flex;border-bottom:1px solid var(--border);background:var(--surface);}
+.ntab{padding:12px 20px;font-size:13px;font-weight:600;color:var(--text2);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap;}
+.ntab:hover{color:var(--text);}
+.ntab.active{color:var(--accent);border-bottom-color:var(--accent);}
+
+/* CONTAINER */
+.container{max-width:820px;margin:0 auto;padding:20px 16px;width:100%;}
+
+/* DATE NAV */
+.date-nav{display:flex;align-items:center;gap:8px;margin-bottom:18px;}
+.date-nav-scroll{display:flex;gap:6px;overflow-x:auto;flex:1;padding-bottom:2px;-webkit-overflow-scrolling:touch;}
+.date-nav-scroll::-webkit-scrollbar{height:3px;}
+.date-nav-scroll::-webkit-scrollbar-track{background:transparent;}
+.date-nav-scroll::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px;}
+.dtab{flex-shrink:0;padding:6px 13px;background:var(--card);border:1px solid var(--border);border-radius:99px;font-size:12px;font-weight:600;color:var(--text2);cursor:pointer;transition:all .15s;white-space:nowrap;}
+.dtab:hover:not(.active){border-color:var(--accent);color:var(--text);}
+.dtab.active{background:var(--accent);color:var(--accent-t);border-color:var(--accent);}
+.nav-arrow{width:30px;height:30px;border-radius:50%;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;flex-shrink:0;transition:border-color .15s;}
+.nav-arrow:hover{border-color:var(--accent);}
+
+/* GAME CARD */
+.games-section{display:flex;flex-direction:column;gap:10px;}
+.game-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;transition:box-shadow .2s;}
+.game-card:hover{box-shadow:var(--sh-lg);}
+.game-inner{padding:14px 16px 12px;}
+.locked-pill{display:inline-flex;align-items:center;gap:5px;background:var(--card2);border:1px solid var(--border2);border-radius:99px;padding:3px 9px;font-size:10px;font-weight:600;color:var(--text3);margin-bottom:8px;}
+.result-pill{display:inline-flex;align-items:center;gap:5px;border-radius:99px;padding:3px 9px;font-size:10px;font-weight:700;margin-bottom:8px;}
+.result-pill.home{background:var(--win-bg);border:1px solid var(--win-b);color:var(--win);}
+.result-pill.draw{background:var(--draw-bg);border:1px solid var(--draw-b);color:var(--draw);}
+.result-pill.away{background:var(--lose-bg);border:1px solid var(--lose-b);color:var(--lose);}
+.teams-row{display:flex;align-items:center;gap:6px;margin-bottom:10px;}
+.team-side{flex:1;display:flex;align-items:center;gap:7px;min-width:0;}
+.team-side.right{flex-direction:row-reverse;}
+.tflag{font-size:18px;flex-shrink:0;}
+.tname{font-size:13px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.vs-b{font-size:10px;font-weight:800;color:var(--text3);background:var(--card2);border:1px solid var(--border2);border-radius:4px;padding:2px 6px;flex-shrink:0;}
+/* Score display */
+.score-display{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--text);letter-spacing:2px;flex-shrink:0;}
+
+.tip-row{display:flex;gap:6px;margin-bottom:8px;}
+.tip-btn{flex:1;padding:8px 3px;border-radius:var(--rs);border:1px solid var(--border);background:var(--card2);color:var(--text);font-size:10px;font-weight:600;cursor:pointer;transition:all .15s;line-height:1.3;text-align:center;}
+.tip-btn .tn{display:block;font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.tip-btn .tl{display:block;font-size:9px;font-weight:500;margin-top:1px;opacity:.7;}
+.tip-btn.win:not(:disabled):hover,.tip-btn.win.selected{background:var(--win-bg);border-color:var(--win-b);color:var(--win);}
+.tip-btn.draw:not(:disabled):hover,.tip-btn.draw.selected{background:var(--draw-bg);border-color:var(--draw-b);color:var(--draw);}
+.tip-btn.lose:not(:disabled):hover,.tip-btn.lose.selected{background:var(--lose-bg);border-color:var(--lose-b);color:var(--lose);}
+.tip-btn:disabled{opacity:.4;cursor:not-allowed;}
+
+/* SUBMIT ROW */
+.submit-row{display:flex;align-items:center;gap:8px;margin-top:4px;}
+.submit-tip-btn{flex:1;padding:9px;background:var(--accent);color:var(--accent-t);border:none;border-radius:var(--rs);font-size:12px;font-weight:700;cursor:pointer;transition:opacity .15s;letter-spacing:.3px;}
+.submit-tip-btn:hover{opacity:.88;}
+.submit-tip-btn:disabled{opacity:.35;cursor:not-allowed;}
+.pending-badge{font-size:10px;color:var(--text3);font-weight:500;white-space:nowrap;}
+
+/* DISTRIBUTION */
+.dist-bar{margin-top:10px;padding-top:10px;border-top:1px solid var(--border2);}
+.dist-track{display:flex;height:4px;border-radius:99px;overflow:hidden;gap:2px;margin-bottom:6px;}
+.ds{transition:width .5s ease;}
+.ds.win{background:var(--win);}
+.ds.draw{background:var(--draw);}
+.ds.lose{background:var(--lose);}
+.dist-labels{display:flex;justify-content:space-between;}
+.di{display:flex;align-items:center;gap:3px;font-size:10px;font-weight:600;}
+.di.wc{color:var(--win);}
+.di.dc{color:var(--draw);}
+.di.lc{color:var(--lose);}
+.dd{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.dd.win{background:var(--win);}
+.dd.draw{background:var(--draw);}
+.dd.lose{background:var(--lose);}
+.tip-count{text-align:center;font-size:10px;color:var(--text3);margin-top:5px;font-weight:500;}
+
+/* MY TIP INDICATOR */
+.my-tip-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;padding:3px 8px;border-radius:99px;margin-left:6px;}
+.my-tip-badge.win{background:var(--win-bg);color:var(--win);border:1px solid var(--win-b);}
+.my-tip-badge.draw{background:var(--draw-bg);color:var(--draw);border:1px solid var(--draw-b);}
+.my-tip-badge.lose{background:var(--lose-bg);color:var(--lose);border:1px solid var(--lose-b);}
+
+/* KO PLACEHOLDER */
+.ko-placeholder{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:48px 24px;text-align:center;}
+.ko-placeholder .ko-icon{font-size:36px;margin-bottom:12px;}
+.ko-placeholder h3{font-size:18px;font-weight:700;margin-bottom:6px;}
+.ko-placeholder p{font-size:13px;color:var(--text2);}
+.coming-soon-badge{display:inline-block;background:var(--draw-bg);border:1px solid var(--draw-b);color:var(--draw);font-size:11px;font-weight:700;padding:4px 12px;border-radius:99px;margin-bottom:14px;letter-spacing:1px;}
+
+/* MODALS */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(3px);z-index:200;align-items:center;justify-content:center;padding:16px;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;width:360px;max-width:100%;position:relative;box-shadow:var(--sh-lg);max-height:90vh;overflow-y:auto;}
+.modal h2{font-size:17px;font-weight:700;margin-bottom:18px;}
+.mclose{position:absolute;top:12px;right:12px;background:var(--card2);border:1px solid var(--border);border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;color:var(--text2);}
+.mclose:hover{color:var(--text);}
+.prows{margin-bottom:16px;}
+.prow{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border2);}
+.prow:last-child{border-bottom:none;}
+.pl{font-size:11px;color:var(--text3);font-weight:500;}
+.pv{font-size:13px;font-weight:600;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.sgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;}
+.sbox{background:var(--card2);border-radius:var(--rs);padding:12px;text-align:center;border:1px solid var(--border2);}
+.sbox .sv{font-size:26px;font-weight:700;font-family:'Bebas Neue',sans-serif;color:var(--accent);}
+.sbox .sl{font-size:10px;color:var(--text3);margin-top:2px;font-weight:500;}
+.lbtn{width:100%;padding:10px;background:none;border:1px solid var(--lose-b);color:var(--lose);border-radius:var(--rs);font-size:13px;font-weight:600;cursor:pointer;transition:background .15s;}
+.lbtn:hover{background:var(--lose-bg);}
+
+/* INFO SECTION in profile */
+.info-toggle-btn{width:100%;padding:10px 12px;background:var(--card2);border:1px solid var(--border);border-radius:var(--rs);font-size:12px;font-weight:700;color:var(--text2);cursor:pointer;text-align:left;transition:all .15s;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;}
+.info-toggle-btn:hover{border-color:var(--accent);color:var(--text);}
+.info-toggle-btn .arrow{transition:transform .2s;font-size:10px;}
+.info-toggle-btn.open .arrow{transform:rotate(180deg);}
+.info-collapse{display:none;}
+.info-collapse.open{display:block;}
+/* INFO SECTION in profile - original*/
+.info-section{background:var(--card2);border:1px solid var(--border2);border-radius:var(--rs);padding:12px;margin-bottom:16px;}
+.info-section h4{font-size:12px;font-weight:700;margin-bottom:8px;color:var(--text2);}
+.info-row{display:flex;justify-content:space-between;font-size:11px;padding:3px 0;border-bottom:1px solid var(--border2);}
+.info-row:last-child{border-bottom:none;}
+.info-row .ik{color:var(--text3);}
+.info-row .iv{font-weight:600;color:var(--accent);}
+
+/* ADMIN */
+.admin-section{margin-bottom:20px;}
+.admin-section h3{font-size:14px;font-weight:700;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border2);}
+.game-result-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border2);flex-wrap:wrap;}
+.game-result-row:last-child{border-bottom:none;}
+.gr-teams{font-size:12px;font-weight:600;flex:1;min-width:0;}
+.gr-date{font-size:10px;color:var(--text3);margin-top:1px;}
+.res-btns{display:flex;gap:5px;}
+.res-btn{padding:5px 10px;font-size:11px;font-weight:600;border-radius:6px;border:1px solid var(--border);background:var(--card2);color:var(--text2);cursor:pointer;transition:all .15s;}
+.res-btn:hover,.res-btn.active{border-color:transparent;}
+.res-btn.home.active{background:var(--win-bg);border-color:var(--win-b);color:var(--win);}
+.res-btn.draw.active{background:var(--draw-bg);border-color:var(--draw-b);color:var(--draw);}
+.res-btn.away.active{background:var(--lose-bg);border-color:var(--lose-b);color:var(--lose);}
+.res-btn.home:hover{background:var(--win-bg);color:var(--win);}
+.res-btn.draw:hover{background:var(--draw-bg);color:var(--draw);}
+.res-btn.away:hover{background:var(--lose-bg);color:var(--lose);}
+.score-inputs{display:flex;align-items:center;gap:4px;}
+.score-inputs input{width:36px;padding:4px;text-align:center;background:var(--card2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:13px;font-weight:700;outline:none;}
+.score-inputs input:focus{border-color:var(--accent);}
+.score-sep{font-weight:700;color:var(--text3);}
+.save-res-btn{padding:5px 10px;font-size:11px;font-weight:700;background:var(--accent);color:var(--accent-t);border:none;border-radius:6px;cursor:pointer;transition:opacity .15s;}
+.save-res-btn:hover{opacity:.85;}
+.admin-badge{background:var(--lose-bg);border:1px solid var(--lose-b);color:var(--lose);font-size:10px;font-weight:700;padding:2px 7px;border-radius:99px;margin-left:6px;}
+
+/* TOAST */
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--text);color:var(--bg);padding:10px 20px;border-radius:99px;font-weight:600;font-size:12px;z-index:300;transition:transform .25s ease;pointer-events:none;white-space:nowrap;}
+#toast.success{background:var(--win);color:#fff;}
+#toast.error{background:var(--lose);color:#fff;}
+#toast.show{transform:translateX(-50%) translateY(0);}
+
+/* DAY HINT + DAY SUBMIT */
+.day-hint-bar{background:linear-gradient(135deg,rgba(232,160,0,0.15),rgba(232,160,0,0.05));border:1px solid rgba(232,160,0,0.4);border-radius:var(--rs);padding:10px 14px;font-size:12px;color:var(--accent);margin-bottom:14px;text-align:center;font-weight:600;letter-spacing:.2px;}
+.day-submit-wrap{margin-top:18px;padding:16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--sh);}
+.day-submit-title{font-size:12px;font-weight:700;color:var(--text2);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.day-submit-btn{width:100%;padding:14px;background:var(--accent);color:var(--accent-t);border:none;border-radius:var(--rs);font-size:14px;font-weight:800;cursor:pointer;transition:opacity .15s;letter-spacing:.5px;display:flex;align-items:center;justify-content:center;gap:8px;}
+.day-submit-btn:hover{opacity:.88;}
+.day-submit-btn:disabled{opacity:.35;cursor:not-allowed;}
+.day-pending-count{display:inline-flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.2);border-radius:99px;min-width:20px;height:20px;font-size:11px;font-weight:800;padding:0 6px;}
+
+/* NOTICE */
+.notice{background:var(--draw-bg);border:1px solid var(--draw-b);border-radius:var(--rs);padding:10px 14px;font-size:12px;color:var(--draw);margin-bottom:14px;text-align:center;cursor:pointer;font-weight:500;}
+.notice:hover{opacity:.85;}
+
+/* MY TIPS VIEW */
+.mytips-list{display:flex;flex-direction:column;gap:8px;}
+.mt-card{background:var(--card);border:1px solid var(--border);border-radius:var(--rs);padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.mt-match{font-size:12px;font-weight:600;}
+.mt-date{font-size:10px;color:var(--text3);margin-top:1px;}
+.mt-right{display:flex;align-items:center;gap:6px;}
+.correct-badge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:99px;}
+.correct-badge.yes{background:var(--win-bg);color:var(--win);border:1px solid var(--win-b);}
+.correct-badge.no{background:var(--lose-bg);color:var(--lose);border:1px solid var(--lose-b);}
+.correct-badge.pending{background:var(--card2);color:var(--text3);border:1px solid var(--border2);}
+</style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div id="login-screen" class="screen active">
+  <div class="login-wrap">
+    <div class="login-hdr">
+      <div class="big">WC <span>2026</span></div>
+      <div class="sub">Prediction Game — Join the competition</div>
+    </div>
+    <div class="atabs">
+      <div class="atab active" id="tab-li" onclick="swTab('li')">Log In</div>
+      <div class="atab" id="tab-re" onclick="swTab('re')">Register</div>
+    </div>
+    <!-- LOGIN -->
+    <div id="form-li" class="fcard">
+      <div class="igrp"><label id="label-li-roblox">Roblox Username</label><input type="text" id="li-roblox" placeholder="YourRobloxName" autocomplete="off"></div>
+      <div class="igrp"><label id="label-li-pass">Password</label><input type="password" id="li-pass" placeholder="Your password"><div style="font-size:10px;color:var(--lose);margin-top:5px;font-weight:600;">⚠️ Never use your real Roblox password!</div></div>
+      <button class="sbtn" id="btn-login" onclick="doLogin()">LOG IN</button>
+    </div>
+    <!-- REGISTER -->
+    <div id="form-re" class="fcard" style="display:none">
+      <div class="igrp"><label id="label-re-roblox">Roblox Username</label><input type="text" id="re-roblox" placeholder="YourRobloxName" autocomplete="off"></div>
+      <div class="igrp"><label id="label-re-discord">Discord Username</label><input type="text" id="re-discord" placeholder="name or name#0000"></div>
+      <div class="igrp"><label id="label-re-pass">Password</label><input type="password" id="re-pass" placeholder="Choose a password"><div style="font-size:10px;color:var(--lose);margin-top:5px;font-weight:600;">⚠️ Never use your real Roblox password!</div></div>
+      <div class="igrp"><label id="label-re-pass2">Confirm Password</label><input type="password" id="re-pass2" placeholder="Repeat password"></div>
+      <button class="sbtn" id="btn-register" onclick="doRegister()">CREATE ACCOUNT</button>
+      <div class="fp-box">
+        <div class="fpt" id="fp-title">⚠️ Fair Play Notice</div>
+        <p>One prediction per game. Multi-accounting is pointless — all picks are linked to your Roblox & Discord names and visible to admins. Play fair! 🤝</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app" class="screen" style="flex-direction:column;">
+  <header>
+    <div class="logo" onclick="openProfile()">⚽ <span>WC</span> 2026</div>
+    <div class="hright">
+      <div class="icon-btn" onclick="toggleTheme()" id="theme-btn" title="Toggle theme">🌙</div>
+      <div class="profile-btn" onclick="openProfile()">
+        <div class="av" id="hav">?</div>
+        <span class="pname" id="hname">Guest</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="nav-tabs">
+    <div class="ntab active" id="ntab-group" onclick="switchNav('group')">Group Stage</div>
+    <div class="ntab" id="ntab-ko" onclick="switchNav('ko')">Knockout Round</div>
+    <div class="ntab" id="ntab-mytips" onclick="switchNav('mytips')">My Predictions</div>
+  </div>
+
+  <div class="container">
+    <div id="notice-bar" class="notice" style="display:none" onclick="showLogin()">
+      ⚠️ Not logged in — click here to log in and place predictions!
+    </div>
+    <div id="day-submit-hint" class="day-hint-bar" style="display:none">
+      ✅ Select your predictions and confirm them below with one click for all games of the day!
+    </div>
+
+    <!-- GROUP STAGE -->
+    <div id="view-group">
+      <div class="date-nav">
+        <div class="nav-arrow" onclick="shiftDate(-1)">‹</div>
+        <div class="date-nav-scroll" id="date-tabs"></div>
+        <div class="nav-arrow" onclick="shiftDate(1)">›</div>
+      </div>
+      <div class="games-section" id="games-list"></div>
+      <div id="day-submit-area" style="display:none" class="day-submit-wrap">
+        <div class="day-submit-title">📨 Confirm all predictions for today <span id="day-pending-info" class="pending-badge"></span></div>
+        <button class="day-submit-btn" id="day-submit-btn" onclick="submitAllDay()">
+          <span id="day-submit-btn-text">✅ CONFIRM ALL PREDICTIONS</span>
+          <span class="day-pending-count" id="day-pending-count">0</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- KO STAGE -->
+    <div id="view-ko" style="display:none">
+      <div class="ko-placeholder">
+        <div class="coming-soon-badge" id="ko-coming-soon">COMING SOON</div>
+        <div class="ko-icon">🏆</div>
+        <h3 id="ko-title">Knockout Round</h3>
+        <p id="ko-text">The knockout round has not started yet.<br>Come back when the group stage is complete!</p>
+      </div>
+    </div>
+
+    <!-- MY PREDICTIONS -->
+    <div id="view-mytips" style="display:none">
+      <div id="mytips-content"></div>
+    </div>
+  </div>
+</div>
+
+<!-- PROFILE MODAL -->
+<div class="modal-overlay" id="modal-profile">
+  <div class="modal">
+    <button class="mclose" onclick="closeModal('profile')">✕</button>
+    <h2 id="profile-title">Mein Profil</h2>
+    <div class="prows">
+      <div class="prow"><span class="pl">Roblox</span><span class="pv" id="p-roblox">–</span></div>
+      <div class="prow"><span class="pl">Discord</span><span class="pv" id="p-discord">–</span></div>
+    </div>
+
+    <!-- Prizes Info -->
+    <div style="background:linear-gradient(135deg,rgba(232,160,0,0.12),rgba(232,160,0,0.04));border:1px solid rgba(232,160,0,0.35);border-radius:var(--rs);padding:12px;margin-bottom:12px;">
+      <div id="prizes-title" style="font-size:11px;font-weight:800;color:var(--accent);margin-bottom:8px;letter-spacing:.5px;">🏆 PRIZES</div>
+      <div style="display:flex;flex-direction:column;gap:5px;">
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px;"><span style="font-size:16px;">🥇</span><span id="place1-label" style="font-weight:700;color:var(--text);">1st Place</span><span style="margin-left:auto;font-weight:800;color:var(--accent);">1.000 Robux</span></div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px;"><span style="font-size:16px;">🥈</span><span id="place2-label" style="font-weight:700;color:var(--text);">2nd Place</span><span style="margin-left:auto;font-weight:700;color:var(--text2);">VIP</span></div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px;"><span style="font-size:16px;">🥉</span><span id="place3-label" style="font-weight:700;color:var(--text);">3rd Place</span><span style="margin-left:auto;font-weight:700;color:var(--text2);">VIP</span></div>
+      </div>
+      <div id="dm-notice" style="font-size:10px;color:var(--text3);margin-top:8px;border-top:1px solid var(--border2);padding-top:6px;">The winner will be notified via Discord DM.</div>
+    </div>
+
+    <!-- Klappbare Spielinfos -->
+    <button class="info-toggle-btn" id="info-toggle-btn" onclick="toggleInfoSection()">
+      <span id="game-info-btn-text">ℹ️ Game Info &amp; Rules</span> <span class="arrow">▼</span>
+    </button>
+    <div class="info-collapse" id="info-collapse">
+      <div class="info-section" style="margin-top:0">
+        <h4 id="how-it-works-title">📋 How it works</h4>
+        <div class="info-row"><span class="ik" id="info-correct-k">Correct Prediction</span><span class="iv">+1 Punkt</span></div>
+        <div class="info-row"><span class="ik" id="info-lock-k">Predictions lock</span><span class="iv" id="info-lock-v">10 min. before kickoff</span></div>
+        <div class="info-row"><span class="ik" id="info-confirm-k">Bestätigen</span><span class="iv" id="info-confirm-v">Unten auf der Seite</span></div>
+        <div class="info-row"><span class="ik" id="info-multi-k">Multi-Accounts</span><span class="iv" id="info-multi-v">Nicht erlaubt</span></div>
+      </div>
+      <div style="background:var(--card2);border:1px solid var(--border2);border-radius:var(--rs);padding:10px 12px;margin-bottom:10px;">
+        <div id="important-note-title" style="font-size:11px;font-weight:700;color:var(--text2);margin-bottom:6px;">⚠️ Important Notice</div>
+        <p id="tim-vivid-note" style="font-size:11px;color:var(--text2);line-height:1.6;">Tim and Vivid (GVL Owners) have <strong>nothing</strong> to do with the prize. Please <strong>do not bother them</strong> about the prize or any issues. Contact the organizer: <strong>herr_meier392 (Lucas)</strong>.</p>
+      </div>
+    </div>
+
+    <div class="sgrid" style="grid-template-columns:1fr 1fr;">
+      <div class="sbox"><div class="sv" id="p-tips">0</div><div class="sl" id="sl-tips">Predictions</div></div>
+      <div class="sbox"><div class="sv" id="p-points" style="color:#3b82f6">0</div><div class="sl" id="sl-points">Points</div></div>
+    </div>
+    <button class="lbtn" id="logout-btn" onclick="doLogout()">Ausloggen</button>
+  </div>
+</div>
+
+
+</div>
+
+<div id="toast"></div>
+
+<script>
+
+
+const WEBHOOK = 'https://discord.com/api/webhooks/1513290700232589382/Fho5Jw-P3GqnvsvdKNJ-HQs76Bxcz9EvCc8UBizxcODt9UBeeEksj8-VIJ87zMY4eXqV';
+const ADMIN_USER = 'lucas';
+const ADMIN_PASS = 'Lucas2010!!!';
+
+const GROUP_GAMES = [
+  {id:1,  date:"2026-06-12",time:"04:00",home:"South Korea",   away:"Czech Republic",      hf:"🇰🇷",af:"🇨🇿"},
+  {id:2,  date:"2026-06-12",time:"21:00",home:"Canada",        away:"Bosnia & Herz.",      hf:"🇨🇦",af:"🇧🇦"},
+  {id:3,  date:"2026-06-11",time:"21:00",home:"Mexico",        away:"South Africa",        hf:"🇲🇽",af:"🇿🇦"},
+  {id:4,  date:"2026-06-13",time:"03:00",home:"USA",           away:"Paraguay",            hf:"🇺🇸",af:"🇵🇾"},
+  {id:5,  date:"2026-06-13",time:"21:00",home:"Qatar",         away:"Switzerland",         hf:"🇶🇦",af:"🇨🇭"},
+  {id:6,  date:"2026-06-14",time:"00:00",home:"Brazil",        away:"Morocco",             hf:"🇧🇷",af:"🇲🇦"},
+  {id:7,  date:"2026-06-14",time:"03:00",home:"Haiti",         away:"Scotland",            hf:"🇭🇹",af:"🏴󠁧󠁢󠁳󠁣󠁴󠁿"},
+  {id:8,  date:"2026-06-14",time:"06:00",home:"Australia",     away:"Turkey",              hf:"🇦🇺",af:"🇹🇷"},
+  {id:9,  date:"2026-06-14",time:"19:00",home:"Germany",       away:"Curaçao",             hf:"🇩🇪",af:"🇨🇼"},
+  {id:10, date:"2026-06-14",time:"22:00",home:"Netherlands",   away:"Japan",               hf:"🇳🇱",af:"🇯🇵"},
+  {id:11, date:"2026-06-15",time:"01:00",home:"Ivory Coast",   away:"Ecuador",             hf:"🇨🇮",af:"🇪🇨"},
+  {id:12, date:"2026-06-15",time:"04:00",home:"Sweden",        away:"Tunisia",             hf:"🇸🇪",af:"🇹🇳"},
+  {id:13, date:"2026-06-15",time:"18:00",home:"Spain",         away:"Cape Verde",          hf:"🇪🇸",af:"🇨🇻"},
+  {id:14, date:"2026-06-15",time:"21:00",home:"Belgium",       away:"Egypt",               hf:"🇧🇪",af:"🇪🇬"},
+  {id:15, date:"2026-06-16",time:"00:00",home:"Saudi Arabia",  away:"Uruguay",             hf:"🇸🇦",af:"🇺🇾"},
+  {id:16, date:"2026-06-16",time:"03:00",home:"Iran",          away:"New Zealand",         hf:"🇮🇷",af:"🇳🇿"},
+  {id:17, date:"2026-06-16",time:"21:00",home:"France",        away:"Senegal",             hf:"🇫🇷",af:"🇸🇳"},
+  {id:18, date:"2026-06-17",time:"00:00",home:"Iraq",          away:"Norway",              hf:"🇮🇶",af:"🇳🇴"},
+  {id:19, date:"2026-06-17",time:"03:00",home:"Argentina",     away:"Algeria",             hf:"🇦🇷",af:"🇩🇿"},
+  {id:20, date:"2026-06-17",time:"06:00",home:"Austria",       away:"Jordan",              hf:"🇦🇹",af:"🇯🇴"},
+  {id:21, date:"2026-06-17",time:"19:00",home:"Portugal",      away:"DR Congo",            hf:"🇵🇹",af:"🇨🇩"},
+  {id:22, date:"2026-06-17",time:"22:00",home:"England",       away:"Croatia",             hf:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",af:"🇭🇷"},
+  {id:23, date:"2026-06-18",time:"01:00",home:"Ghana",         away:"Panama",              hf:"🇬🇭",af:"🇵🇦"},
+  {id:24, date:"2026-06-18",time:"04:00",home:"Uzbekistan",    away:"Colombia",            hf:"🇺🇿",af:"🇨🇴"},
+  {id:25, date:"2026-06-18",time:"18:00",home:"Czech Republic",away:"South Africa",        hf:"🇨🇿",af:"🇿🇦"},
+  {id:26, date:"2026-06-18",time:"21:00",home:"Switzerland",   away:"Bosnia & Herz.",      hf:"🇨🇭",af:"🇧🇦"},
+  {id:27, date:"2026-06-19",time:"00:00",home:"Canada",        away:"Qatar",               hf:"🇨🇦",af:"🇶🇦"},
+  {id:28, date:"2026-06-19",time:"03:00",home:"Mexico",        away:"South Korea",         hf:"🇲🇽",af:"🇰🇷"},
+  {id:29, date:"2026-06-19",time:"21:00",home:"USA",           away:"Australia",           hf:"🇺🇸",af:"🇦🇺"},
+  {id:30, date:"2026-06-20",time:"00:00",home:"Scotland",      away:"Morocco",             hf:"🏴󠁧󠁢󠁳󠁣󠁴󠁿",af:"🇲🇦"},
+  {id:31, date:"2026-06-20",time:"02:30",home:"Brazil",        away:"Haiti",               hf:"🇧🇷",af:"🇭🇹"},
+  {id:32, date:"2026-06-20",time:"05:00",home:"Turkey",        away:"Paraguay",            hf:"🇹🇷",af:"🇵🇾"},
+  {id:33, date:"2026-06-20",time:"19:00",home:"Netherlands",   away:"Sweden",              hf:"🇳🇱",af:"🇸🇪"},
+  {id:34, date:"2026-06-20",time:"22:00",home:"Germany",       away:"Ivory Coast",         hf:"🇩🇪",af:"🇨🇮"},
+  {id:35, date:"2026-06-21",time:"02:00",home:"Ecuador",       away:"Curaçao",             hf:"🇪🇨",af:"🇨🇼"},
+  {id:36, date:"2026-06-21",time:"06:00",home:"Tunisia",       away:"Japan",               hf:"🇹🇳",af:"🇯🇵"},
+  {id:37, date:"2026-06-21",time:"18:00",home:"Spain",         away:"Saudi Arabia",        hf:"🇪🇸",af:"🇸🇦"},
+  {id:38, date:"2026-06-21",time:"21:00",home:"Belgium",       away:"Iran",                hf:"🇧🇪",af:"🇮🇷"},
+  {id:39, date:"2026-06-22",time:"00:00",home:"Uruguay",       away:"Cape Verde",          hf:"🇺🇾",af:"🇨🇻"},
+  {id:40, date:"2026-06-22",time:"03:00",home:"New Zealand",   away:"Egypt",               hf:"🇳🇿",af:"🇪🇬"},
+  {id:41, date:"2026-06-22",time:"19:00",home:"Argentina",     away:"Austria",             hf:"🇦🇷",af:"🇦🇹"},
+  {id:42, date:"2026-06-22",time:"23:00",home:"France",        away:"Iraq",                hf:"🇫🇷",af:"🇮🇶"},
+  {id:43, date:"2026-06-23",time:"02:00",home:"Norway",        away:"Senegal",             hf:"🇳🇴",af:"🇸🇳"},
+  {id:44, date:"2026-06-23",time:"05:00",home:"Jordan",        away:"Algeria",             hf:"🇯🇴",af:"🇩🇿"},
+  {id:45, date:"2026-06-23",time:"19:00",home:"Portugal",      away:"Uzbekistan",          hf:"🇵🇹",af:"🇺🇿"},
+  {id:46, date:"2026-06-23",time:"22:00",home:"England",       away:"Ghana",               hf:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",af:"🇬🇭"},
+  {id:47, date:"2026-06-24",time:"01:00",home:"Panama",        away:"Croatia",             hf:"🇵🇦",af:"🇭🇷"},
+  {id:48, date:"2026-06-24",time:"04:00",home:"Colombia",      away:"DR Congo",            hf:"🇨🇴",af:"🇨🇩"},
+  {id:71, date:"2026-06-24",time:"21:00",home:"Switzerland",   away:"Canada",              hf:"🇨🇭",af:"🇨🇦"},
+  {id:72, date:"2026-06-24",time:"21:00",home:"Bosnia & Herz.",away:"Qatar",               hf:"🇧🇦",af:"🇶🇦"},
+  {id:49, date:"2026-06-25",time:"00:00",home:"Scotland",      away:"Brazil",              hf:"🏴󠁧󠁢󠁳󠁣󠁴󠁿",af:"🇧🇷"},
+  {id:50, date:"2026-06-25",time:"00:00",home:"Morocco",       away:"Haiti",               hf:"🇲🇦",af:"🇭🇹"},
+  {id:51, date:"2026-06-25",time:"03:00",home:"South Africa",  away:"South Korea",         hf:"🇿🇦",af:"🇰🇷"},
+  {id:52, date:"2026-06-25",time:"03:00",home:"Czech Republic",away:"Mexico",              hf:"🇨🇿",af:"🇲🇽"},
+  {id:53, date:"2026-06-25",time:"22:00",home:"Ecuador",       away:"Germany",             hf:"🇪🇨",af:"🇩🇪"},
+  {id:54, date:"2026-06-25",time:"22:00",home:"Curaçao",       away:"Ivory Coast",         hf:"🇨🇼",af:"🇨🇮"},
+  {id:55, date:"2026-06-26",time:"01:00",home:"Tunisia",       away:"Netherlands",         hf:"🇹🇳",af:"🇳🇱"},
+  {id:56, date:"2026-06-26",time:"01:00",home:"Japan",         away:"Sweden",              hf:"🇯🇵",af:"🇸🇪"},
+  {id:57, date:"2026-06-26",time:"04:00",home:"Paraguay",      away:"Australia",           hf:"🇵🇾",af:"🇦🇺"},
+  {id:58, date:"2026-06-26",time:"04:00",home:"Turkey",        away:"USA",                 hf:"🇹🇷",af:"🇺🇸"},
+  {id:59, date:"2026-06-26",time:"21:00",home:"Senegal",       away:"Iraq",                hf:"🇸🇳",af:"🇮🇶"},
+  {id:60, date:"2026-06-26",time:"21:00",home:"Norway",        away:"France",              hf:"🇳🇴",af:"🇫🇷"},
+  {id:61, date:"2026-06-27",time:"02:00",home:"Uruguay",       away:"Spain",               hf:"🇺🇾",af:"🇪🇸"},
+  {id:62, date:"2026-06-27",time:"02:00",home:"Cape Verde",    away:"Saudi Arabia",        hf:"🇨🇻",af:"🇸🇦"},
+  {id:63, date:"2026-06-27",time:"05:00",home:"New Zealand",   away:"Belgium",             hf:"🇳🇿",af:"🇧🇪"},
+  {id:64, date:"2026-06-27",time:"05:00",home:"Egypt",         away:"Iran",                hf:"🇪🇬",af:"🇮🇷"},
+  {id:65, date:"2026-06-27",time:"23:00",home:"Panama",        away:"England",             hf:"🇵🇦",af:"🏴󠁧󠁢󠁥󠁮󠁧󠁿"},
+  {id:66, date:"2026-06-27",time:"23:00",home:"Croatia",       away:"Ghana",               hf:"🇭🇷",af:"🇬🇭"},
+  {id:67, date:"2026-06-28",time:"01:30",home:"Colombia",      away:"Portugal",            hf:"🇨🇴",af:"🇵🇹"},
+  {id:68, date:"2026-06-28",time:"01:30",home:"DR Congo",      away:"Uzbekistan",          hf:"🇨🇩",af:"🇺🇿"},
+  {id:69, date:"2026-06-28",time:"04:00",home:"Jordan",        away:"Argentina",           hf:"🇯🇴",af:"🇦🇷"},
+  {id:70, date:"2026-06-28",time:"04:00",home:"Algeria",       away:"Austria",             hf:"🇩🇿",af:"🇦🇹"},
+];
+
+// STATE
+let user = JSON.parse(localStorage.getItem('wm26_user')||'null');
+let tips = {};           // pending (not yet submitted) selection per gameId
+let submittedTips = {};  // already submitted tips per gameId
+let allTips = JSON.parse(localStorage.getItem('wm26_all_tips')||'{}');
+let results = JSON.parse(localStorage.getItem('wm26_results')||'{}');
+let koGames = JSON.parse(localStorage.getItem('wm26_ko_games')||'[]');
+let currentDate = null;
+let currentNav = 'group';
+let isDark = localStorage.getItem('wm26_theme')==='dark';
+// webhook debounce
+let whTimers = {};
+
+// THEME
+function applyTheme(){
+  document.documentElement.setAttribute('data-theme', isDark?'dark':'light');
+  const b = document.getElementById('theme-btn');
+  if(b) b.textContent = isDark?'☀️':'🌙';
+}
+function toggleTheme(){ isDark=!isDark; localStorage.setItem('wm26_theme',isDark?'dark':'light'); applyTheme(); }
+applyTheme();
+
+// AUTH TAB
+function swTab(t){
+  document.getElementById('tab-li').classList.toggle('active',t==='li');
+  document.getElementById('tab-re').classList.toggle('active',t==='re');
+  document.getElementById('form-li').style.display = t==='li'?'':'none';
+  document.getElementById('form-re').style.display = t==='re'?'':'none';
+}
+
+// ACCOUNTS
+function getAccounts(){ return JSON.parse(localStorage.getItem('wm26_accounts')||'{}'); }
+function saveAccounts(a){ localStorage.setItem('wm26_accounts',JSON.stringify(a)); }
+
+function doRegister(){
+  const roblox = document.getElementById('re-roblox').value.trim();
+  const discord = document.getElementById('re-discord').value.trim();
+  const pass = document.getElementById('re-pass').value;
+  const pass2 = document.getElementById('re-pass2').value;
+  if(!roblox||!discord||!pass){ toast('Please fill in all fields','error'); return; }
+  if(pass!==pass2){ toast('Passwords do not match','error'); return; }
+  if(pass.length<4){ toast('Password must be at least 4 characters','error'); return; }
+  const accs = getAccounts();
+  if(accs[roblox.toLowerCase()]){ toast('This Roblox name is already registered','error'); return; }
+  const isAdmin = roblox.toLowerCase() === ADMIN_USER.toLowerCase() && pass === ADMIN_PASS;
+  accs[roblox.toLowerCase()] = { roblox, discord, password: pass, isAdmin };
+  saveAccounts(accs);
+  toast('Account created! You can now log in','success');
+  document.getElementById('re-roblox').value='';
+  document.getElementById('re-discord').value='';
+  document.getElementById('re-pass').value='';
+  document.getElementById('re-pass2').value='';
+  swTab('li');
+  document.getElementById('li-roblox').value = roblox;
+}
+
+function doLogin(){
+  const roblox = document.getElementById('li-roblox').value.trim();
+  const pass = document.getElementById('li-pass').value;
+  if(!roblox||!pass){ toast('Please fill in all fields','error'); return; }
+  const accs = getAccounts();
+  let acc = accs[roblox.toLowerCase()];
+  // Auto-create admin account if credentials match and no account exists yet
+  if(!acc && roblox.toLowerCase() === ADMIN_USER.toLowerCase() && pass === ADMIN_PASS){
+    accs[roblox.toLowerCase()] = { roblox, discord: 'Admin', password: pass, isAdmin: true };
+    saveAccounts(accs);
+    acc = accs[roblox.toLowerCase()];
+  }
+  if(!acc){ toast('No account found — please register first','error'); return; }
+  if(acc.password!==pass){ toast('Wrong password','error'); return; }
+  const isAdmin = roblox.toLowerCase() === ADMIN_USER.toLowerCase() && pass === ADMIN_PASS;
+  user = { roblox: acc.roblox, discord: acc.discord, isAdmin };
+  localStorage.setItem('wm26_user', JSON.stringify(user));
+  submittedTips = JSON.parse(localStorage.getItem('wm26_stips_'+acc.roblox.toLowerCase())||'{}');
+  tips = {};
+  showApp();
+}
+
+function doLogout(){
+  user = null; tips = {}; submittedTips = {};
+  localStorage.removeItem('wm26_user');
+  closeModal('profile');
+  document.getElementById('login-screen').classList.add('active');
+  document.getElementById('app').classList.remove('active');
+  document.getElementById('li-pass').value='';
+}
+
+function showLogin(){
+  document.getElementById('login-screen').classList.add('active');
+  document.getElementById('app').classList.remove('active');
+}
+
+function showApp(){
+  document.getElementById('login-screen').classList.remove('active');
+  document.getElementById('app').classList.add('active');
+  if(user){
+    document.getElementById('hname').textContent = user.roblox;
+    document.getElementById('hav').textContent = user.roblox[0].toUpperCase();
+    document.getElementById('notice-bar').style.display='none';
+  } else {
+    document.getElementById('hname').textContent='Guest';
+    document.getElementById('hav').textContent='?';
+    document.getElementById('notice-bar').style.display='block';
+  }
+  updateProfileStats();
+  renderTabs();
+  renderGames();
+}
+
+// NAV
+function switchNav(v){
+  currentNav = v;
+  ['group','ko','mytips'].forEach(n=>{
+    document.getElementById('ntab-'+n).classList.toggle('active',n===v);
+    document.getElementById('view-'+n).style.display = n===v?'':'none';
+  });
+  if(v==='mytips') renderMyTips();
+}
+
+// DATES
+function getUniqueDates(){ return [...new Set(GROUP_GAMES.map(g=>g.date))].sort(); }
+function gameDateTime(g){ return new Date(g.date+'T'+g.time+':00+02:00'); }
+function isLocked(g){ return Date.now() >= gameDateTime(g).getTime() - 10*60*1000; }
+function fmtTab(d){
+  const dt = new Date(d+'T12:00:00');
+  const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return `${days[dt.getDay()]} ${dt.getDate()} ${months[dt.getMonth()]}`;
+}
+
+let dateTabIndex = 0;
+const VISIBLE_TABS = 5;
+
+function renderTabs(){
+  const dates = getUniqueDates();
+  const tabs = document.getElementById('date-tabs');
+  if(!tabs) return;
+  if(!currentDate){
+    const today = new Date().toISOString().slice(0,10);
+    currentDate = dates.find(d=>d>=today)||dates[dates.length-1];
+  }
+  const ci = dates.indexOf(currentDate);
+  if(ci >= 0) dateTabIndex = Math.max(0, Math.min(ci, dates.length - VISIBLE_TABS));
+  tabs.innerHTML='';
+  const visible = dates.slice(dateTabIndex, dateTabIndex + VISIBLE_TABS);
+  visible.forEach(d=>{
+    const btn = document.createElement('div');
+    btn.className='dtab'+(d===currentDate?' active':'');
+    btn.textContent = fmtTab(d);
+    btn.onclick = ()=>{ currentDate=d; renderTabs(); renderGames(); };
+    tabs.appendChild(btn);
+  });
+}
+
+function shiftDate(dir){
+  const dates = getUniqueDates();
+  const ci = dates.indexOf(currentDate);
+  const ni = Math.max(0, Math.min(dates.length-1, ci+dir));
+  currentDate = dates[ni];
+  renderTabs();
+  renderGames();
+}
+
+// GAMES
+function renderGames(){
+  const list = document.getElementById('games-list');
+  if(!list) return;
+  const games = GROUP_GAMES.filter(g=>g.date===currentDate);
+  if(!games.length){ list.innerHTML='<div class="no-games">No games on this day</div>'; return; }
+  list.innerHTML='';
+  games.forEach(g=>{
+    const locked = isLocked(g);
+    const pending = tips[g.id];   // not yet submitted
+    const submitted = submittedTips[g.id]; // already sent
+    const result = results[g.id]; // 'win'/'draw'/'lose' or null
+    const dist = allTips[g.id]||{win:0,draw:0,lose:0};
+    const tipCount = dist.win+dist.draw+dist.lose;
+    const total = tipCount||1;
+    const wp=Math.round(dist.win/total*100);
+    const dp=Math.round(dist.draw/total*100);
+    const lp=100-wp-dp;
+    const scoreData = results['score_'+g.id]||null;
+
+    // Result pill
+    let resultPillHtml = '';
+    if(result){
+      if(result==='win') resultPillHtml=`<div class="result-pill home">🟢 ${g.home} Win</div>`;
+      else if(result==='draw') resultPillHtml=`<div class="result-pill draw">🟡 Draw</div>`;
+      else resultPillHtml=`<div class="result-pill away">🔴 ${g.away} Win</div>`;
+    }
+
+    // My tip badge
+    let myBadge = '';
+    if(submitted){
+      const lbl = submitted==='win'?g.home+' Win':submitted==='draw'?'Draw':g.away+' Win';
+      myBadge = `<span class="my-tip-badge ${submitted}">✓ ${lbl}</span>`;
+    }
+
+    const scoreHtml = scoreData ? `<div class="score-display">${scoreData.home} : ${scoreData.away}</div>` : `<div class="vs-b">VS</div>`;
+
+    const card = document.createElement('div');
+    card.className='game-card';
+    card.innerHTML=`
+      <div class="game-inner">
+        <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:${(locked||result)?'8px':'0'}">
+          ${result ? resultPillHtml : locked ? `<div class="locked-pill">🔒 Closed</div>` : ''}
+          ${myBadge}
+        </div>
+        <div class="teams-row">
+          <div class="team-side"><span class="tflag">${g.hf}</span><span class="tname">${g.home}</span></div>
+          ${scoreHtml}
+          <div class="team-side right"><span class="tflag">${g.af}</span><span class="tname">${g.away}</span></div>
+        </div>
+        ${!locked && !result ? `
+        <div class="tip-row">
+          <button class="tip-btn win ${pending==='win'?'selected':''}" data-gid="${g.id}" data-tip="win">
+            <span class="tn">${g.home}</span><span class="tl">Win</span>
+          </button>
+          <button class="tip-btn draw ${pending==='draw'?'selected':''}" data-gid="${g.id}" data-tip="draw">
+            <span class="tn">Draw</span><span class="tl">X</span>
+          </button>
+          <button class="tip-btn lose ${pending==='lose'?'selected':''}" data-gid="${g.id}" data-tip="lose">
+            <span class="tn">${g.away}</span><span class="tl">Win</span>
+          </button>
+        </div>
+        <div style="margin-top:4px;display:flex;align-items:center;gap:6px;">
+          ${pending ? `<span style="font-size:10px;color:var(--accent);font-weight:700;">${'⏳ Confirm below'}</span>` : submitted ? `<span style="font-size:10px;color:var(--win);font-weight:600;">${'✓ Saved'}</span>` : ''}
+        </div>` : ''}
+
+      </div>`;
+    list.appendChild(card);
+  });
+
+  // Show/hide day submit area
+  const dayGamesForArea = GROUP_GAMES.filter(g=>g.date===currentDate);
+  const anyPending = dayGamesForArea.some(g=>tips[g.id]);
+  const pendingCnt = dayGamesForArea.filter(g=>tips[g.id]).length;
+  const dayArea = document.getElementById('day-submit-area');
+  const dayHint = document.getElementById('day-submit-hint');
+  const dayCount = document.getElementById('day-pending-count');
+  if(dayArea){
+    dayArea.style.display = anyPending ? '' : 'none';
+    if(dayCount) dayCount.textContent = pendingCnt;
+  }
+  if(dayHint){
+    dayHint.style.display = (!user || anyPending) ? '' : 'none';
+  }
+
+  // Tip selection buttons
+  document.querySelectorAll('.tip-btn').forEach(btn=>{
+    btn.addEventListener('click', function(){
+      if(!user){ toast('Please log in to place a prediction!','error'); return; }
+      const gid = parseInt(this.dataset.gid);
+      const tip = this.dataset.tip;
+      if(tips[gid]===tip){ delete tips[gid]; } else { tips[gid]=tip; }
+      renderGames();
+    });
+  });
+}
+
+// SUBMIT TIP (sends to Discord)
+async function submitTip(gid){
+  if(!user){ toast('Please log in!','error'); return; }
+  const tip = tips[gid];
+  if(!tip){ toast('Select a result first','error'); return; }
+  const g = GROUP_GAMES.find(x=>x.id===gid);
+  if(isLocked(g)){
+    toast('⏰ Too late — predictions are locked!','error');
+    fetch(WEBHOOK,{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({embeds:[{
+        title:'🔒 Late Prediction Attempt',
+        description:`**${g.hf} ${g.home}  vs  ${g.af} ${g.away}**`,
+        color:0xc93030,
+        fields:[
+          {name:'👤 Roblox',value:'`'+user.roblox+'`',inline:true},
+          {name:'💬 Discord',value:'`'+user.discord+'`',inline:true},
+          {name:'​',value:'​',inline:true},
+          {name:'⛔ Blocked Tip',value:'**'+(tip==='win'?g.home+' Win':tip==='draw'?'Draw':g.away+' Win')+'**',inline:true},
+          {name:'📅 Date',value:g.date,inline:true},
+          {name:'⏰ Kickoff',value:g.time+' CET',inline:true}
+        ],
+        footer:{text:'WC 2026 Prediction Game — Prediction rejected (game locked)'},
+        timestamp:new Date().toISOString()
+      }]})
+    }).catch(()=>{});
+    renderGames();
+    return;
+  }
+  const prevSubmitted = submittedTips[gid];
+
+  // Update distribution
+  if(!allTips[gid]) allTips[gid]={win:0,draw:0,lose:0};
+  if(prevSubmitted) allTips[gid][prevSubmitted]=Math.max(0,allTips[gid][prevSubmitted]-1);
+  allTips[gid][tip]=(allTips[gid][tip]||0)+1;
+
+  submittedTips[gid]=tip;
+  delete tips[gid];
+
+  localStorage.setItem('wm26_stips_'+user.roblox.toLowerCase(), JSON.stringify(submittedTips));
+  localStorage.setItem('wm26_tips', JSON.stringify(submittedTips)); // backward compat
+  localStorage.setItem('wm26_all_tips', JSON.stringify(allTips));
+  updateProfileStats();
+  renderGames();
+
+
+  // Debounced Discord send (3s delay to avoid spam on change)
+  clearTimeout(whTimers[gid]);
+  whTimers[gid] = setTimeout(()=>{
+    const action = prevSubmitted ? 'changed' : 'placed';
+    const emoji = tip==='win'?'🟢':tip==='draw'?'🟡':'🔴';
+    const tLabel = t => t==='win'?g.home+' Win':t==='draw'?'Draw':g.away+' Win';
+    const tipColor = tip==='win'?0x2ecc71:tip==='draw'?0xf1c40f:0xe74c3c;
+    const isChange = action==='changed';
+    const tipEmoji2 = tip==='win'?'🟢':tip==='draw'?'🟡':'🔴';
+    fetch(WEBHOOK,{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({embeds:[{
+        author:{name:'WC 2026 Prediction Game',icon_url:'https://cdn3.emoji.gg/emojis/5283-soccer-ball.png'},
+        title: isChange ? '🔄  Prediction Changed' : '⚽  New Prediction',
+        description: `## ${g.hf}  ${g.home}  ——  ${g.away}  ${g.af}
+📅  ${g.date}  ·  ⏰  Kickoff ${g.time}`,
+        color: tipColor,
+        fields:[
+          {name:'👤  Roblox',value:'```'+user.roblox+'```',inline:true},
+          {name:'💬  Discord',value:'```'+user.discord+'```',inline:true},
+          {name:'​',value:'​',inline:false},
+          {name: isChange ? '🔄  Changed Tip' : tipEmoji2+'  Prediction',
+           value: isChange
+             ? '~~'+tLabel(prevSubmitted)+'~~  →  **'+tLabel(tip)+'**'
+             : '### '+tLabel(tip),
+           inline:false}
+        ],
+        footer:{text:'WC 2026 Prediction Game  •  Organizer: herr_meier392 (Lucas)',icon_url:'https://cdn3.emoji.gg/emojis/5283-soccer-ball.png'},
+        timestamp:new Date().toISOString()
+      }]})
+    }).catch(()=>{});
+  }, 3000);
+}
+
+// SUBMIT ALL DAY
+async function submitAllDay(){
+  const pendingKeys = Object.keys(tips);
+  if(pendingKeys.length === 0){ toast('No prediction selected','error'); return; }
+  const dayGames = GROUP_GAMES.filter(g=>g.date===currentDate);
+  const dayPending = dayGames.filter(g=>tips[g.id]);
+  if(dayPending.length===0){ toast('No prediction selected','error'); return; }
+  for(const g of dayPending){
+    const tip = tips[g.id];
+    if(!tip) continue;
+    if(isLocked(g)){
+      toast('⏰ Too late — predictions are locked!','error');
+      fetch(WEBHOOK,{
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({embeds:[{
+          title:'🔒 Late Prediction Attempt',
+          description:`**${g.hf} ${g.home}  vs  ${g.af} ${g.away}**`,
+          color:0xc93030,
+          fields:[
+            {name:'👤 Roblox',value:'`'+user.roblox+'`',inline:true},
+            {name:'💬 Discord',value:'`'+user.discord+'`',inline:true},
+            {name:'​',value:'​',inline:true},
+            {name:'⛔ Blocked Tip',value:'**'+(tip==='win'?g.home+' Win':tip==='draw'?'Draw':g.away+' Win')+'**',inline:true},
+            {name:'📅 Date',value:g.date,inline:true},
+            {name:'⏰ Kickoff',value:g.time+' CET',inline:true}
+          ],
+          footer:{text:'WC 2026 Prediction Game — Prediction rejected (game locked)'},
+          timestamp:new Date().toISOString()
+        }]})
+      }).catch(()=>{});
+      delete tips[g.id];
+      continue;
+    }
+    const prevSubmitted = submittedTips[g.id];
+    if(!allTips[g.id]) allTips[g.id]={win:0,draw:0,lose:0};
+    if(prevSubmitted) allTips[g.id][prevSubmitted]=Math.max(0,allTips[g.id][prevSubmitted]-1);
+    allTips[g.id][tip]=(allTips[g.id][tip]||0)+1;
+    submittedTips[g.id]=tip;
+    delete tips[g.id];
+    // Send Discord webhook per game
+    const action = prevSubmitted ? 'changed' : 'placed';
+    const tLabel = t => t==='win'?g.home+' Win':t==='draw'?'Draw':g.away+' Win';
+    const tipColor = tip==='win'?0x1a9e4a:tip==='draw'?0xc47d00:0xc93030;
+    fetch(WEBHOOK,{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({embeds:[{
+        title: action==='changed' ? '🔄 Prediction Changed' : '⚽ New Prediction',
+        description: `**${g.hf} ${g.home}  vs  ${g.af} ${g.away}**`,
+        color: tipColor,
+        fields:[
+          {name:'👤 Roblox',value:'`'+user.roblox+'`',inline:true},
+          {name:'💬 Discord',value:'`'+user.discord+'`',inline:true},
+          {name:'​',value:'​',inline:true},
+          {name: action==='changed' ? '🔄 Tip' : (tip==='win'?'🟢':'🟡')+' Tip',value:'**'+tLabel(tip)+'**',inline:true},
+          {name:'📅 Datum',value:g.date,inline:true},
+          {name:'⏰ Kickoff',value:g.time,inline:true}
+        ],
+        footer:{text:'WC 2026 Prediction Game'},
+        timestamp:new Date().toISOString()
+      }]})
+    }).catch(()=>{});
+    await new Promise(r=>setTimeout(r,400)); // slight delay between webhook calls
+  }
+  localStorage.setItem('wm26_stips_'+user.roblox.toLowerCase(), JSON.stringify(submittedTips));
+  localStorage.setItem('wm26_all_tips', JSON.stringify(allTips));
+  updateProfileStats();
+  renderGames();
+  toast('✅ All predictions confirmed!','success');
+}
+
+function toggleInfoSection(){
+  const btn = document.getElementById('info-toggle-btn');
+  const col = document.getElementById('info-collapse');
+  btn.classList.toggle('open');
+  col.classList.toggle('open');
+}
+
+// MY TIPS VIEW
+function renderMyTips(){
+  const el = document.getElementById('mytips-content');
+  if(!user){ el.innerHTML='<div class="notice" onclick="showLogin()">Log in to see your predictions</div>'; return; }
+  const all = GROUP_GAMES;
+  const myKeys = Object.keys(submittedTips);
+  if(myKeys.length===0){ el.innerHTML=`<p style="text-align:center;color:var(--text3);padding:40px 0;font-size:13px;">${'No predictions submitted yet'}</p>`; return; }
+  el.innerHTML='<div class="mytips-list" id="mt-list"></div>';
+  const listEl = document.getElementById('mt-list');
+  myKeys.forEach(gid=>{
+    const g = all.find(x=>x.id===parseInt(gid));
+    if(!g) return;
+    const tip = submittedTips[gid];
+    const result = results[gid];
+    let statusHtml = '';
+    if(!result){ statusHtml=`<span class="correct-badge pending">${'Pending'}</span>`; }
+    else if(result===tip){ statusHtml=`<span class="correct-badge yes">${'✓ Correct'}</span>`; }
+    else { statusHtml=`<span class="correct-badge no">${'✗ Wrong'}</span>`; }
+    const tLabel = tip==='win'?g.home+' Win':tip==='draw'?'Draw':g.away+' Win';
+    const div = document.createElement('div');
+    div.className='mt-card';
+    div.innerHTML=`
+      <div>
+        <div class="mt-match">${g.hf} ${g.home} vs ${g.away} ${g.af}</div>
+        <div class="mt-date">${g.date} · Your pick: <strong>${tLabel}</strong></div>
+      </div>
+      <div class="mt-right">${statusHtml}</div>`;
+    listEl.appendChild(div);
+  });
+}
+
+// PROFILE
+function updateProfileStats(){
+  if(!user) return;
+  const cnt = Object.keys(submittedTips).length;
+  let correct=0;
+  Object.keys(submittedTips).forEach(gid=>{
+    if(results[gid] && results[gid]===submittedTips[gid]) correct++;
+  });
+  const stats = JSON.parse(localStorage.getItem('wm26_stats_'+user.roblox.toLowerCase())||'{"points":0,"rank":"-"}');
+  document.getElementById('p-roblox').textContent = user.roblox;
+  document.getElementById('p-discord').textContent = user.discord;
+  document.getElementById('p-tips').textContent = cnt;
+  document.getElementById('p-points').textContent = correct; // 1 pt per correct
+  // rank removed
+  // admin panel removed
+}
+
+function openProfile(){
+  if(!user){ showLogin(); return; }
+  updateProfileStats();
+  openModal('profile');
+}
+
+// ADMIN
+function openAdmin(){
+  closeModal('profile');
+  renderAdminPanel();
+  openModal('admin');
+}
+
+function renderAdminPanel(){
+  const el = document.getElementById('admin-games-list');
+  el.innerHTML='';
+  GROUP_GAMES.forEach(g=>{
+    const r = results[g.id]||'';
+    const sc = results['score_'+g.id]||{home:'',away:''};
+    const row = document.createElement('div');
+    row.className='game-result-row';
+    row.innerHTML=`
+      <div class="gr-teams">
+        ${g.hf} ${g.home} vs ${g.away} ${g.af}
+        <div class="gr-date">${g.date}</div>
+      </div>
+      <div class="score-inputs">
+        <input type="number" min="0" max="20" id="sh-${g.id}" value="${sc.home}" placeholder="0">
+        <span class="score-sep">:</span>
+        <input type="number" min="0" max="20" id="sa-${g.id}" value="${sc.away}" placeholder="0">
+      </div>
+      <div class="res-btns">
+        <button class="res-btn home ${r==='win'?'active':''}" onclick="setResult(${g.id},'win')">H</button>
+        <button class="res-btn draw ${r==='draw'?'active':''}" onclick="setResult(${g.id},'draw')">X</button>
+        <button class="res-btn away ${r==='lose'?'active':''}" onclick="setResult(${g.id},'lose')">A</button>
+      </div>
+      <button class="save-res-btn" onclick="saveResult(${g.id})">Save</button>`;
+    el.appendChild(row);
+  });
+
+  // KO list
+  const koEl = document.getElementById('ko-matches-list');
+  koEl.innerHTML = koGames.length===0 ? '<p style="font-size:12px;color:var(--text3)">No KO matches added yet</p>' : '';
+  koGames.forEach((g,i)=>{
+    const div = document.createElement('div');
+    div.style.cssText='display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border2);font-size:12px;';
+    div.innerHTML=`<span style="flex:1">${g.hf||''} ${g.home} vs ${g.away} ${g.af||''} <span style="color:var(--text3)">(${g.date} · ${g.round})</span></span>
+      <button onclick="removeKO(${i})" style="background:var(--lose-bg);border:1px solid var(--lose-b);color:var(--lose);border-radius:6px;padding:3px 8px;font-size:11px;cursor:pointer;">Remove</button>`;
+    koEl.appendChild(div);
+  });
+}
+
+let adminPendingResult = {};
+function setResult(gid, res){
+  adminPendingResult[gid] = res;
+  renderAdminPanel();
+  // auto-set pending
+  results[gid] = res;
+}
+
+function saveResult(gid){
+  const sh = document.getElementById('sh-'+gid);
+  const sa = document.getElementById('sa-'+gid);
+  if(!results[gid]){ toast('Select a result first (H/X/A)','error'); return; }
+  if(sh && sa && sh.value!=='' && sa.value!==''){
+    results['score_'+gid]={home:sh.value, away:sa.value};
+  }
+  localStorage.setItem('wm26_results', JSON.stringify(results));
+  toast('Result saved!','success');
+  renderGames();
+  renderAdminPanel();
+}
+
+function addKOMatch(){
+  const home = document.getElementById('ko-home').value.trim();
+  const away = document.getElementById('ko-away').value.trim();
+  const date = document.getElementById('ko-date').value.trim();
+  const time = document.getElementById('ko-time').value.trim()||'21:00';
+  const round = document.getElementById('ko-round').value.trim()||'Knockout';
+  if(!home||!away||!date){ toast('Fill in home, away, and date','error'); return; }
+  const newId = 1000 + koGames.length + 1;
+  koGames.push({id:newId, home, away, hf:'', af:'', date, time, round, isKO:true});
+  localStorage.setItem('wm26_ko_games', JSON.stringify(koGames));
+  document.getElementById('ko-home').value='';
+  document.getElementById('ko-away').value='';
+  document.getElementById('ko-date').value='';
+  document.getElementById('ko-round').value='';
+  toast('KO match added!','success');
+  renderAdminPanel();
+}
+
+function removeKO(i){
+  koGames.splice(i,1);
+  localStorage.setItem('wm26_ko_games', JSON.stringify(koGames));
+  toast('Match removed');
+  renderAdminPanel();
+}
+
+// MODALS
+function openModal(id){ document.getElementById('modal-'+id).classList.add('open'); }
+function closeModal(id){ document.getElementById('modal-'+id).classList.remove('open'); }
+document.querySelectorAll('.modal-overlay').forEach(el=>{
+  el.addEventListener('click',function(e){ if(e.target===this) this.classList.remove('open'); });
+});
+
+// TOAST
+let toastT;
+function toast(msg, type=''){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.className=(type?type+' ':'')+'show';
+  clearTimeout(toastT);
+  toastT=setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+// KEYBOARD
+document.addEventListener('keydown',e=>{
+  if(e.key!=='Enter') return;
+  const liActive = document.getElementById('form-li').style.display!=='none';
+  const screen = document.getElementById('login-screen').classList.contains('active');
+  if(screen){ liActive ? doLogin() : doRegister(); }
+});
+
+// INIT
+if(user){
+  submittedTips = JSON.parse(localStorage.getItem('wm26_stips_'+user.roblox.toLowerCase())||'{}');
+  showApp();
+}
+</script>
+
+<div style="text-align:center;padding:10px 16px 14px;font-size:10px;color:var(--text3);background:var(--surface);border-top:1px solid var(--border2);">
+  ⚽ This is not an official FIFA World Cup website. This is a fan project by the <strong>GVL Roblox League</strong>.
+</div>
+</body>
+</html>
